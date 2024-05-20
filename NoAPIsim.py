@@ -35,9 +35,13 @@ try:
     with open(config_file_path) as f:
         config = yaml.safe_load(f)
 except FileNotFoundError:
-    exit(f"Error: Could not find configuration file at path '{config_file_path}'")
+    print(f"Error: Could not find configuration file at path '{config_file_path}'")
+    exit()
 except Exception as e:
-    exit(f"Error loading configuration file at path '{config_file_path}': {e}")
+    print(f"Error loading configuration file at path '{config_file_path}': {e}")
+    exit()
+else:
+    print(f"Configuration file loaded successfully from path '{config_file_path}'")
 
 # Retrieve the file path from the configuration file
 file_path = config.get("file_path")
