@@ -51,7 +51,7 @@ try:
     falcon_hosts = Hosts(client_id=client_secret, client_secret=client_secret)
     falcon_rtr = RealTimeResponse(client_id=client_id, client_secret=client_secret)
 except APIError as e:
-    exit(f"APIError during authentication: {e.message}")
+    exit(f"API error during authentication: {e.message}")
 except Exception as e:
     exit(f"Error during API connection: {e}")
 
@@ -83,6 +83,6 @@ for hostname in hostnames:
         else:
             print(f"No host found for hostname: {hostname}")
     except APIError as e:
-        print(f"APIError querying host {hostname}: {e.message}")
+        print(f"API error querying host {hostname}: {e.message}")
     except Exception as e:
         print(f"Error querying host {hostname}: {e}")

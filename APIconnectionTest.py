@@ -5,6 +5,7 @@ from falconpy import Hosts, APIError
 # Constants
 CONFIG_FILE = 'config.yaml'
 
+
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection():
     # Check if the configuration file exists
@@ -25,7 +26,7 @@ def test_crowdstrike_connection():
     # Connect to the CrowdStrike API
     try:
         falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
-        # Perform a simple request to verify the connection, e.g., get a list of devices
+        # Perform a simple request to verify the connection
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
             print("Successfully connected to the CrowdStrike API.")
@@ -35,6 +36,7 @@ def test_crowdstrike_connection():
         print(f"APIError during authentication: {e.message}")
     except Exception as e:
         print(f"Error during API connection: {e}")
+
 
 # Run the test
 test_crowdstrike_connection()

@@ -26,7 +26,7 @@ def read_hostnames(file_path):
 
 # Simulated function to contain a host by its ID (for testing purposes)
 def contain_host_by_id_simulated(host_id):
-    pass # removed print statement for simulated containment
+    pass
 
 
 # Read the configuration YAML file
