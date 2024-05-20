@@ -59,7 +59,7 @@ set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
 
 ## Run the containment script:
 ```bash
-python contain_hosts.py
+python Containment.py
 ```
 
 ## Error Handling
