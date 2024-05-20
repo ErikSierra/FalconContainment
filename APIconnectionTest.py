@@ -6,26 +6,26 @@ Use 'Containment.py' for Crowdstrike API containment process/tests
 """
 
 import os
+import yaml
 from falconpy import Hosts, APIError
 
 '''
 In cmd:
-set CROWDSTRIKE_CLIENT_ID=your_client_id_here
-set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
 python APIconnectionTest.py
 '''
+
+CONFIG_FILE = 'config.yaml'
 
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection():
-    # API credentials (get these from environment variables for security)
-    client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')
-    client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')
+    # Load the API credentials and file path from the configuration file
+    with open(CONFIG_FILE, 'r') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
 
-    # Check if API credentials are available
-    if not client_id or not client_secret:
-        print("Error: CrowdStrike API credentials are not set in the environment variables.")
-        return
+    # API credentials
+    client_id = config['api']['client_id']
+    client_secret = config['api']['client_secret']
 
     # Connect to the CrowdStrike API
     try:
