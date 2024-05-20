@@ -73,6 +73,11 @@ The scripts include basic error handling to manage issues such as:
 - The scripts rely on the falconpy library to interact with the CrowdStrike API.
 - Adjust the file paths and environment variable settings as needed based on your environment and setup.
 
+## Screenshots
+
+![Screenshot of My Image](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
+
+
   ## References
 
 This project utilizes the [FalconPY](https://github.com/CrowdStrike/falconpy) library to interact with the CrowdStrike API. FalconPY is an open-source Python client for the CrowdStrike Falcon API, providing easy integration and interaction with CrowdStrike's suite of services.
