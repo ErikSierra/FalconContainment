@@ -59,5 +59,4 @@ for hostname in hostnames:
     simulated_host_id = f"simulated_host_id_for_{hostname}"
     # Simulate containing the host using its ID
     contain_host_by_id_simulated(simulated_host_id)
-    # Removed print statement for simulated containment response
     print(f"Simulated containment response for {hostname} ({simulated_host_id})")
