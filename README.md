@@ -19,7 +19,7 @@ The project aims to simplify the security operations process by automating the c
    
 3. Obtaining API Credentials
 - Before using the CrowdStrike API, you will need to obtain your client ID and client secret.
-- These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret. -
+- These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret.
 - Insert these credentials in the YAML file.
 
 ## Setup
