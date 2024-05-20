@@ -1,5 +1,5 @@
 """
-Note: 
+Note:
     This script is for testing purposes to attempt a mock simulation of 'Containment.py'
 This script does not perform any official API containment within Crowdstrike Falcon or related resources.
 Use 'Containment.py' for Crowdstrike API containment
@@ -44,8 +44,3 @@ for hostname in hostnames:
     contain_host_by_id_simulated(simulated_host_id)
     # Print the simulated containment response
     print(f"Simulated containment response for {hostname} ({simulated_host_id})")
-
-'''
-Note: This script is for testing purposes and does not actually interact with the CrowdStrike API.
-Use 'Containment.py' for Crowdstrike API interaction
-'''
