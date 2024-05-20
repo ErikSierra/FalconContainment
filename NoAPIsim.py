@@ -6,6 +6,7 @@ Use 'Containment.py' for Crowdstrike API containment
 """
 
 import os
+import yaml
 
 
 # Function to read hostnames from a text file
@@ -25,11 +26,23 @@ def read_hostnames(file_path):
 
 # Simulated function to contain a host by its ID (for testing purposes)
 def contain_host_by_id_simulated(host_id):
-    print(f"Simulated containment for host ID {host_id}")
+    pass # removed print statement for simulated containment
 
 
-# Path to your text file
-file_path = 'computers.txt'  # REPLACEME
+# Read the configuration YAML file
+config_file_path = "config.yaml"
+try:
+    with open(config_file_path) as f:
+        config = yaml.safe_load(f)
+except FileNotFoundError:
+    exit(f"Error: Could not find configuration file at path '{config_file_path}'")
+except Exception as e:
+    exit(f"Error loading configuration file at path '{config_file_path}': {e}")
+
+# Retrieve the file path from the configuration file
+file_path = config.get("file_path")
+if not file_path:
+    exit("Exiting due to missing or empty file path in configuration file.")
 
 # Read hostnames from the file
 hostnames = read_hostnames(file_path)
@@ -42,5 +55,5 @@ for hostname in hostnames:
     simulated_host_id = f"simulated_host_id_for_{hostname}"
     # Simulate containing the host using its ID
     contain_host_by_id_simulated(simulated_host_id)
-    # Print the simulated containment response
+    # Removed print statement for simulated containment response
     print(f"Simulated containment response for {hostname} ({simulated_host_id})")

@@ -1,20 +1,6 @@
 import os
+import yaml
 from falconpy import Hosts, RealTimeResponse, APIError
-
-
-# Function to read hostnames from a text file
-def read_hostnames(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            # Read all lines and remove extra spaces/newlines
-            hostnames = [line.strip() for line in file.readlines()]
-        return hostnames
-    except FileNotFoundError:
-        print(f"Error: The file {file_path} was not found.")
-        return []
-    except Exception as e:
-        print(f"Error reading {file_path}: {e}")
-        return []
 
 
 # Function to contain a host by its ID
@@ -28,30 +14,51 @@ def contain_host_by_id(falcon_rtr, host_id):
         print(f"Error containing host ID {host_id}: {e}")
 
 
-# Path to your text file
-file_path = 'computers.txt'  # REPLACEME
+# Function to read the configuration from a YAML file
+def read_config(filename):
+    try:
+        with open(filename, 'r') as file:
+            config = yaml.safe_load(file)
+        return config
+    except FileNotFoundError:
+        print(f"Error: The file {filename} was not found.")
+        return {}
+    except Exception as e:
+        print(f"Error reading {filename}: {e}")
+        return {}
 
-# Read hostnames from the file
-hostnames = read_hostnames(file_path)
-if not hostnames:
-    exit("Exiting due to missing or empty hostname file.")
 
-# API credentials (get these from environment variables for security)
-client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')
-client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')
+# Connect to the CrowdStrike API using the configuration file
+config = read_config("config.yaml")
+client_id = config.get('api', {}).get('client_id', None)
+client_secret = config.get('api', {}).get('client_secret', None)
+file_path = config.get('file_path', None)
 
-# Check if API credentials are available
 if not client_id or not client_secret:
-    exit("Error: CrowdStrike API credentials are not set in the environment variables.")
+    exit("Error: CrowdStrike API credentials are missing from config file.")
 
-# Connect to the CrowdStrike API
+if not file_path:
+    exit("Error: File path is missing from config file.")
+
 try:
-    falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
+    falcon_hosts = Hosts(client_id=client_secret, client_secret=client_secret)
     falcon_rtr = RealTimeResponse(client_id=client_id, client_secret=client_secret)
 except APIError as e:
     exit(f"APIError during authentication: {e.message}")
 except Exception as e:
     exit(f"Error during API connection: {e}")
+
+# Read hostnames from the file
+try:
+    with open(file_path, 'r') as file:
+        hostnames = [line.strip() for line in file.readlines()]
+except FileNotFoundError:
+    exit(f"Error: The file {file_path} was not found.")
+except Exception as e:
+    exit(f"Error reading {file_path}: {e}")
+
+if not hostnames:
+    exit("Exiting due to missing or empty hostname file.")
 
 # Look up each hostname using the CrowdStrike API
 for hostname in hostnames:
