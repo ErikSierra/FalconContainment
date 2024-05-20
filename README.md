@@ -1,9 +1,9 @@
 # FalconContainment
 
 ## Overview
-This project utilizes the CrowdStrike Falcon API to contain a list of specified hosts through real-time response. 
-
-It reads the list of hostnames from a configuration file, queries the API for each host, and contains the hosts if found.
+This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
+The code reads the list of hostnames from a configuration file, queries the API to obtain the host ID, and then contains the host using its ID. 
+The project aims to simplify the security operations process by automating the containment process using the API.
 
 ## Prerequisites
 
