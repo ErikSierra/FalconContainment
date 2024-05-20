@@ -1,3 +1,10 @@
+"""
+Note:
+    This script is for testing purposes to attempt connection to API in Crowdstrike Falcon
+This script does not perform any official API containment within Crowdstrike Falcon or related resources.
+Use 'Containment.py' for Crowdstrike API containment process/tests
+"""
+
 import os
 from falconpy import Hosts, APIError
 
