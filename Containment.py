@@ -29,7 +29,7 @@ def contain_host_by_id(falcon_rtr, host_id):
 
 
 # Path to your text file
-file_path = 'computers.txt'  # Adjust if necessary
+file_path = 'computers.txt'  # REPLACEME
 
 # Read hostnames from the file
 hostnames = read_hostnames(file_path)
@@ -37,16 +37,8 @@ if not hostnames:
     exit("Exiting due to missing or empty hostname file.")
 
 # API credentials (get these from environment variables for security)
-
-'''
-In cmd: 
-set CROWDSTRIKE_CLIENT_ID=your_client_id_here
-set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
-python your_script.py
-'''
-
-client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')
-client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')
+client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')  # REPLACEME
+client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')  # REPLACEME
 
 # Check if API credentials are available
 if not client_id or not client_secret:
