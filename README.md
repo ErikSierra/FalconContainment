@@ -75,7 +75,7 @@ The scripts include basic error handling to manage issues such as:
 
 ## Screenshots
 
-![Screenshot of My Image](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
+![Screenshot of NoAPIsim.py](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
 
 
   ## References
