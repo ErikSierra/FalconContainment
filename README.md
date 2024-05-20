@@ -8,13 +8,22 @@ This project provides scripts to:
 
 ## Prerequisites
 
-Before using these scripts, ensure you have:
+1. Before using these scripts, ensure you have:
 - Python 3.6 or higher installed.
-- `falconpy` library installed. You can install it using pip:
-  ```bash
-  pip install falconpy
-  ```
+- `pip` (Python package installer) installed. You can install it from [here](https://pip.pypa.io/en/stable/installation/).
 
+2. Install the required Python packages listed in the requirements.txt file
+   ```bash
+   pip install -r requirements.txt
+
+## Setup
+
+1. Clone this repository to your local machine.
+2. (Optional but recommended) Create a virtual environment and activate it:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
+  
 ## Usage
 Testing Connection
 To test the connection to the CrowdStrike API:
