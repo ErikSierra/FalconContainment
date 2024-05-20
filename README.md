@@ -32,7 +32,7 @@ To test the connection to the CrowdStrike API:
 - client_id
 - client_secret
 - file_path
-```
+
 2. Run the connection test script:
 
 ```bash
