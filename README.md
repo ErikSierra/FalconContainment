@@ -65,7 +65,7 @@ The scripts include basic error handling to manage issues such as:
 ## Notes
 - Ensure your computers.txt file is correctly formatted with one hostname per line.
 - The scripts rely on the falconpy library to interact with the CrowdStrike API.
-- Adjust the file paths and environment variable settings as needed based on your environment and setup.
+- Adjust the API credentials and file path in the YAML file as needed according to your environment. 
 
 ## Screenshots
 
