@@ -1,25 +1,20 @@
-"""
-Note:
-    This script is for testing purposes to attempt connection to API in Crowdstrike Falcon
-This script does not perform any official API containment within Crowdstrike Falcon or related resources.
-Use 'Containment.py' for Crowdstrike API containment process/tests
-"""
-
 import os
 import yaml
 from falconpy import Hosts, APIError
 
-'''
-In cmd:
-python APIconnectionTest.py
-'''
-
+# Constants
 CONFIG_FILE = 'config.yaml'
-
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection():
-    # Load the API credentials and file path from the configuration file
+    # Check if the configuration file exists
+    if not os.path.isfile(CONFIG_FILE):
+        print(f"Error: Configuration file '{CONFIG_FILE}' not found.")
+        return
+    else:
+        print(f"Configuration file '{CONFIG_FILE}' found! Checking connection...")
+
+    # Load the API credentials from the configuration file
     with open(CONFIG_FILE, 'r') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -40,7 +35,6 @@ def test_crowdstrike_connection():
         print(f"APIError during authentication: {e.message}")
     except Exception as e:
         print(f"Error during API connection: {e}")
-
 
 # Run the test
 test_crowdstrike_connection()

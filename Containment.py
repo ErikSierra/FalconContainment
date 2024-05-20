@@ -16,20 +16,27 @@ def contain_host_by_id(falcon_rtr, host_id):
 
 # Function to read the configuration from a YAML file
 def read_config(filename):
+    success = False
     try:
         with open(filename, 'r') as file:
             config = yaml.safe_load(file)
-        return config
+        success = True
+        print(f"Successfully read configuration from file {filename}")
+        return success, config
     except FileNotFoundError:
         print(f"Error: The file {filename} was not found.")
-        return {}
+        return success, {}
     except Exception as e:
         print(f"Error reading {filename}: {e}")
-        return {}
+        return success, {}
 
 
 # Connect to the CrowdStrike API using the configuration file
-config = read_config("config.yaml")
+success, config = read_config("config.yaml")
+if not success:
+    print("Error: could not read the configuration file.")
+    exit()
+
 client_id = config.get('api', {}).get('client_id', None)
 client_secret = config.get('api', {}).get('client_secret', None)
 file_path = config.get('file_path', None)
