@@ -37,8 +37,8 @@ if not hostnames:
     exit("Exiting due to missing or empty hostname file.")
 
 # API credentials (get these from environment variables for security)
-client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')  # REPLACEME
-client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')  # REPLACEME
+client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')
+client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')
 
 # Check if API credentials are available
 if not client_id or not client_secret:
