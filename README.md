@@ -37,7 +37,7 @@ set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
 2. Run the connection test script:
 
 ```bash
-python test_crowdstrike_connection.py
+python APIconnectionTest.py
 ```
 
 ## Containing Hosts
