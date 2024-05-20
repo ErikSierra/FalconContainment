@@ -12,7 +12,7 @@ from falconpy import Hosts, APIError
 In cmd:
 set CROWDSTRIKE_CLIENT_ID=your_client_id_here
 set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
-python test_crowdstrike_connection.py
+python APIconnectionTest.py
 '''
 
 
