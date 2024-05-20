@@ -28,11 +28,10 @@ This project provides scripts to:
 Testing Connection
 To test the connection to the CrowdStrike API:
 
-1. Set your CrowdStrike API credentials as environment variables:
-On Windows:
-```bash
-set CROWDSTRIKE_CLIENT_ID=your_client_id_here
-set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
+1. Set the following fields in the YAML file to reflect the correct information
+- client_id
+- client_secret
+- file_path
 ```
 2. Run the connection test script:
 
@@ -49,13 +48,7 @@ computer2
 computer3
 ```
 
-2. Set your CrowdStrike API credentials as environment variables (if not already set):
-
-On Windows:
-```bash
-set CROWDSTRIKE_CLIENT_ID=your_client_id_here
-set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
-```
+2. Set your YAML file to reflect the name of this .txt file 
 
 ## Run the containment script:
 ```bash
@@ -64,9 +57,10 @@ python Containment.py
 
 ## Error Handling
 The scripts include basic error handling to manage issues such as:
-- Missing or invalid environment variables.
-- File not found errors for computers.txt.
-- API errors during connection or requests.
+- Handling API errors that may occur during authentication, querying and containing hosts, and printing the relevant error messages to the console.
+- Handling common file I/O errors such as FileNotFoundError and printing the relevant error messages to the console.
+- Checking if the configuration file has the required API credentials and file path values, exiting the script if any of them are missing.
+- Checking if the hostname file exists and is not empty, exiting the script if it is missing or empty.
 
 ## Notes
 - Ensure your computers.txt file is correctly formatted with one hostname per line.
