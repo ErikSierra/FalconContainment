@@ -26,12 +26,12 @@ This project provides scripts to:
   
 ## Usage
 Testing Connection
+
 To test the connection to the CrowdStrike API:
 
 1. Set the following fields in the YAML file to reflect the correct information
 - client_id
 - client_secret
-- file_path
 
 2. Run the connection test script:
 
