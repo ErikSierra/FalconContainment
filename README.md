@@ -82,4 +82,8 @@ The scripts include basic error handling to manage issues such as:
 
 This project utilizes the [FalconPY](https://github.com/CrowdStrike/falconpy) library to interact with the CrowdStrike API. FalconPY is an open-source Python client for the CrowdStrike Falcon API, providing easy integration and interaction with CrowdStrike's suite of services.
 
-For more information, documentation, and examples, visit the FalconPY GitHub repository: [FalconPY on GitHub](https://github.com/CrowdStrike/falconpy).
+For more information, documentation, and examples:
+
+Visit the FalconPY GitHub repository: [FalconPY on GitHub](https://github.com/CrowdStrike/falconpy).
+
+Visit the FalconPY Wiki for Python: [CrowdstrikeFalconWiki](https://www.falconpy.io/Home.html).
