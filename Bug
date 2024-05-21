@@ -1,0 +1,104 @@
+PS C:\Users\fs123440\downloads\FalconContainment-main> python .\Containment.py
+Successfully connected to the CrowdStrike API.
+API Response: {
+    "status_code": 200,
+    "headers": {
+        "Server": "nginx",
+        "Date": "Tue, 21 May 2024 17:45:50 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "224",
+        "Connection": "keep-alive",
+        "Content-Encoding": "gzip",
+        "Strict-Transport-Security": "max-age=15724800; includeSubDomains, max-age=31536000; includeSubDomains",
+        "X-Cs-Region": "us-1",
+        "X-Cs-Traceid": "f553064d-9356-4201-804a-3b91510530ba",
+        "X-Ratelimit-Limit": "6000",
+        "X-Ratelimit-Remaining": "5995"
+    },
+    "body": {
+        "meta": {
+            "query_time": 0.00835376,
+            "pagination": {
+                "offset": 1,
+                "limit": 1,
+                "total": 11798
+            },
+            "powered_by": "device-api",
+            "trace_id": "f553064d-9356-4201-804a-3b91510530ba"
+        },
+        "resources": [
+            "78984c0e479645ee84c67dd8407b4819"
+        ],
+        "errors": []
+    }
+}
+Read hostnames: ['lab-infosec']
+Host details for lab-infosec (e200b636823046e1b6c0d5ce8455a7fa): {
+    "status_code": 200,
+    "headers": {
+        "Server": "nginx",
+        "Date": "Tue, 21 May 2024 17:45:54 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "222",
+        "Connection": "keep-alive",
+        "Content-Encoding": "gzip",
+        "Strict-Transport-Security": "max-age=15724800; includeSubDomains, max-age=31536000; includeSubDomains",
+        "X-Cs-Region": "us-1",
+        "X-Cs-Traceid": "6f820bff-6696-4015-83d1-9ade51816f4a",
+        "X-Ratelimit-Limit": "6000",
+        "X-Ratelimit-Remaining": "5994"
+    },
+    "body": {
+        "meta": {
+            "query_time": 0.007162986,
+            "pagination": {
+                "offset": 1,
+                "limit": 100,
+                "total": 1
+            },
+            "powered_by": "device-api",
+            "trace_id": "6f820bff-6696-4015-83d1-9ade51816f4a"
+        },
+        "resources": [
+            "e200b636823046e1b6c0d5ce8455a7fa"
+        ],
+        "errors": []
+    }
+}
+Failed to contain lab-infosec (e200b636823046e1b6c0d5ce8455a7fa): {
+    "status_code": 202,
+    "headers": {
+        "Server": "nginx",
+        "Date": "Tue, 21 May 2024 17:45:56 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "215",
+        "Connection": "keep-alive",
+        "Content-Encoding": "gzip",
+        "Strict-Transport-Security": "max-age=15724800; includeSubDomains, max-age=31536000; includeSubDomains",
+        "X-Cs-Region": "us-1",
+        "X-Cs-Traceid": "dd7cb05a-1ce9-4db9-80e5-cd2219fa7948",
+        "X-Ratelimit-Limit": "6000",
+        "X-Ratelimit-Remaining": "5993"
+    },
+    "body": {
+        "meta": {
+            "query_time": 0.365061849,
+            "powered_by": "device-api",
+            "trace_id": "dd7cb05a-1ce9-4db9-80e5-cd2219fa7948"
+        },
+        "resources": [
+            {
+                "id": "e200b636823046e1b6c0d5ce8455a7fa",
+                "path": "/devices/entities/devices/v1"
+            }
+        ],
+        "errors": []
+    }
+}
+ 
+Summary:
+Successfully contained hosts:
+ 
+Failed to contain hosts:
+- lab-infosec
+PS C:\Users\fs123440\downloads\FalconContainment-main>
