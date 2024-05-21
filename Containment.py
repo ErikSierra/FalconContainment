@@ -1,5 +1,6 @@
 import os
 import yaml
+import json
 from falconpy import Hosts, RealTimeResponse, APIError
 
 # Constants
@@ -53,15 +54,15 @@ def test_crowdstrike_connection(config):
         if response["status_code"] == 200:
             print("Successfully connected to the CrowdStrike API.")
             # Debug: Print the response from the API
-            print(f"API Response: {response}")
+            print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
             print("Unauthorized: Please check your API credentials.")
             # Debug: Print more details for troubleshooting
-            print(f"Response details: {response}")
+            print(f"Response details: {json.dumps(response, indent=4)}")
         else:
             print(f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}")
             # Debug: Print more details for troubleshooting
-            print(f"Response details: {response}")
+            print(f"Response details: {json.dumps(response, indent=4)}")
     except APIError as e:
         print(f"APIError during authentication: {e.message}")
     except Exception as e:
@@ -83,6 +84,10 @@ config = load_config(CONFIG_FILE)
 
 # Run the connection test
 test_crowdstrike_connection(config)
+
+# Initialize success and failure lists
+successfully_contained_hosts = []
+failed_to_contain_hosts = []
 
 # If the configuration is loaded and contains the file path, read the hostnames
 if config and 'file_path' in config:
@@ -111,18 +116,37 @@ if config and 'file_path' in config:
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
+                    # Pretty print the host details
+                    print(f"Host details for {hostname} ({host_id}): {json.dumps(response, indent=4)}")
                     # Contain the host using its ID
                     containment_response = contain_host_by_id(falcon_hosts, host_id)
-                    # Print the containment response
-                    if containment_response:
-                        print(f"Containment response for {hostname} ({host_id}): {containment_response}")
+                    # Check the containment response
+                    if containment_response and containment_response["status_code"] == 200:
+                        successfully_contained_hosts.append(hostname)
+                        print(f"Successfully contained {hostname} ({host_id})")
+                    else:
+                        failed_to_contain_hosts.append(hostname)
+                        print(f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}")
                 else:
                     print(f"No host found for hostname: {hostname}")
+                    failed_to_contain_hosts.append(hostname)
             except APIError as e:
                 print(f"APIError querying host {hostname}: {e.message}")
+                failed_to_contain_hosts.append(hostname)
             except Exception as e:
                 print(f"Error querying host {hostname}: {e}")
+                failed_to_contain_hosts.append(hostname)
     else:
         print("No hostnames found in the specified file.")
 else:
     print("File path for hostnames not specified in the configuration file.")
+
+# Print summary
+print("\nSummary:")
+print("Successfully contained hosts:")
+for host in successfully_contained_hosts:
+    print(f"- {host}")
+
+print("\nFailed to contain hosts:")
+for host in failed_to_contain_hosts:
+    print(f"- {host}")
