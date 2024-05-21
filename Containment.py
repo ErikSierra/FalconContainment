@@ -79,14 +79,9 @@ def contain_host_by_id(falcon_hosts, host_id):
         print(f"Error containing host ID {host_id}: {e}")
         return None
 
-# Load the configuration
-config = load_config(CONFIG_FILE)
-
-# Run the connection test
-test_crowdstrike_connection(config)
-
 # Initialize success and failure lists
 successfully_contained_hosts = []
+pending_contained_hosts = []
 failed_to_contain_hosts = []
 
 # If the configuration is loaded and contains the file path, read the hostnames
@@ -102,7 +97,6 @@ if config and 'file_path' in config:
         # Connect to the CrowdStrike API for containment
         try:
             falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
-            falcon_rtr = RealTimeResponse(client_id=client_id, client_secret=client_secret)
         except APIError as e:
             print(f"APIError during authentication: {e.message}")
         except Exception as e:
@@ -121,12 +115,20 @@ if config and 'file_path' in config:
                     # Contain the host using its ID
                     containment_response = contain_host_by_id(falcon_hosts, host_id)
                     # Check the containment response
-                    if containment_response and containment_response["status_code"] == 200:
-                        successfully_contained_hosts.append(hostname)
-                        print(f"Successfully contained {hostname} ({host_id})")
+                    if containment_response:
+                        if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
+                            successfully_contained_hosts.append(hostname)
+                            print(f"Successfully contained {hostname} ({host_id})")
+                        elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
+                            pending_contained_hosts.append(hostname)
+                            print(f"Containment for {hostname} ({host_id}) is pending: {json.dumps(containment_response, indent=4)}")
+                        else:
+                            failed_to_contain_hosts.append(hostname)
+                            print(f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}")
                     else:
                         failed_to_contain_hosts.append(hostname)
-                        print(f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}")
+                        print(f"Failed to contain {hostname} ({host_id}): No response from containment request")
+
                 else:
                     print(f"No host found for hostname: {hostname}")
                     failed_to_contain_hosts.append(hostname)
@@ -147,6 +149,11 @@ print("Successfully contained hosts:")
 for host in successfully_contained_hosts:
     print(f"- {host}")
 
+print("\nPending containment hosts:")
+for host in pending_contained_hosts:
+    print(f"- {host}")
+
 print("\nFailed to contain hosts:")
 for host in failed_to_contain_hosts:
     print(f"- {host}")
+
