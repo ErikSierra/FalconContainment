@@ -86,4 +86,4 @@ For more information, documentation, and examples:
 
 Visit the FalconPY GitHub repository: [FalconPY on GitHub](https://github.com/CrowdStrike/falconpy).
 
-Visit the FalconPY Wiki for Python: [Wiki](https://www.falconpy.io/Home.html).
+Visit the FalconPY Wiki for Python: [CrowdstrikeFalconWiki](https://www.falconpy.io/Home.html).
