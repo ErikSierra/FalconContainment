@@ -11,13 +11,13 @@ def load_config(file_path):
         print(f"Error: Configuration file '{file_path}' not found.")
         return None
 
-    with open(file_path, 'r') as f:
-        try:
+    try:
+        with open(file_path, 'r') as f:
             config = yaml.safe_load(f)
             return config
-        except yaml.YAMLError as e:
-            print(f"Error reading configuration file: {e}")
-            return None
+    except yaml.YAMLError as e:
+        print(f"Error reading configuration file: {e}")
+        return None
 
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
@@ -31,7 +31,6 @@ def read_hostnames(file_path):
     except Exception as e:
         print(f"Error reading '{file_path}': {e}")
         return []
-
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(config):
@@ -68,18 +67,16 @@ def test_crowdstrike_connection(config):
     except Exception as e:
         print(f"Error during API connection: {e}")
 
-
 # Function to contain a host by its ID
-def contain_host_by_id(falcon_rtr, host_id):
+def contain_host_by_id(falcon_hosts, host_id):
     try:
-        response = falcon_rtr.contain_host(device_id=host_id)
+        response = falcon_hosts.perform_action(action_name="contain", ids=[host_id])
         return response
     except APIError as e:
         print(f"APIError containing host ID {host_id}: {e.message}")
     except Exception as e:
         print(f"Error containing host ID {host_id}: {e}")
         return None
-
 
 # Load the configuration
 config = load_config(CONFIG_FILE)
@@ -115,7 +112,7 @@ if config and 'file_path' in config:
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     # Contain the host using its ID
-                    containment_response = contain_host_by_id(falcon_rtr, host_id)
+                    containment_response = contain_host_by_id(falcon_hosts, host_id)
                     # Print the containment response
                     if containment_response:
                         print(f"Containment response for {hostname} ({host_id}): {containment_response}")
