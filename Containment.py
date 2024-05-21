@@ -79,6 +79,12 @@ def contain_host_by_id(falcon_hosts, host_id):
         print(f"Error containing host ID {host_id}: {e}")
         return None
 
+# Load the configuration
+config = load_config(CONFIG_FILE)
+
+# Test the connection to the CrowdStrike API
+test_crowdstrike_connection(config)
+
 # Initialize success and failure lists
 successfully_contained_hosts = []
 pending_contained_hosts = []
@@ -128,7 +134,6 @@ if config and 'file_path' in config:
                     else:
                         failed_to_contain_hosts.append(hostname)
                         print(f"Failed to contain {hostname} ({host_id}): No response from containment request")
-
                 else:
                     print(f"No host found for hostname: {hostname}")
                     failed_to_contain_hosts.append(hostname)
@@ -156,4 +161,3 @@ for host in pending_contained_hosts:
 print("\nFailed to contain hosts:")
 for host in failed_to_contain_hosts:
     print(f"- {host}")
-
