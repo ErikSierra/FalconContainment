@@ -6,6 +6,7 @@ from falconpy import Hosts, RealTimeResponse, APIError
 # Constants
 CONFIG_FILE = 'config.yaml'
 
+
 # Function to load configuration
 def load_config(file_path):
     if not os.path.isfile(file_path):
@@ -20,6 +21,7 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         return None
 
+
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
     if not os.path.isfile(file_path):
@@ -32,6 +34,7 @@ def read_hostnames(file_path):
     except Exception as e:
         print(f"Error reading '{file_path}': {e}")
         return []
+
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(config):
@@ -68,6 +71,7 @@ def test_crowdstrike_connection(config):
     except Exception as e:
         print(f"Error during API connection: {e}")
 
+
 # Function to contain a host by its ID
 def contain_host_by_id(falcon_hosts, host_id):
     try:
@@ -78,6 +82,7 @@ def contain_host_by_id(falcon_hosts, host_id):
     except Exception as e:
         print(f"Error containing host ID {host_id}: {e}")
         return None
+
 
 # Load the configuration
 config = load_config(CONFIG_FILE)
