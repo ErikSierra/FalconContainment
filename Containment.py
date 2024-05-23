@@ -95,7 +95,7 @@ successfully_contained_hosts = []
 pending_contained_hosts = []
 failed_to_contain_hosts = []
 
-# If the configuration is loaded and contains the file path, read the hostnames
+# If the configuration is loaded and contains the file path, read the hostnames (lots of conditionals)
 if config and 'file_path' in config:
     hostnames = read_hostnames(config['file_path'])
     if hostnames:
