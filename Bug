@@ -1,1 +1,17 @@
+PS C:\Users\fs123440\downloads\FalconContainment-main> python .\ContainmentStatus.py
+Successfully connected to the CrowdStrike API.
+Read hostnames: ['lab-infosec3', 'lab-infosec2', 'lab-infosec4']
+Error querying host lab-infosec3: 'Hosts' object has no attribute 'check_containment_status'
+Error querying host lab-infosec2: 'Hosts' object has no attribute 'check_containment_status'
+Error querying host lab-infosec4: 'Hosts' object has no attribute 'check_containment_status'
 
+Summary:
+Contained hosts:
+
+Pending containment hosts:
+
+Non-contained hosts:
+- lab-infosec3
+- lab-infosec2
+- lab-infosec4
+PS C:\Users\fs123440\downloads\FalconContainment-main>
