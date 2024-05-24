@@ -89,7 +89,7 @@ The scripts include basic error handling to manage issues such as:
 - Keep an eye on the overall status of containment, as well as the status of individual hosts, in your Crowdstrike tool and script's output. 
 
 ## Screenshots
-
+![Screenshot of progress](https://i.imgur.com/aAZwz47.png)
 ![Screenshot of NoAPIsim.py](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
 ![Screenshot of Containment.py](https://i.imgur.com/vAXFnpb.png)
 
