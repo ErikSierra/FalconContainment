@@ -103,7 +103,7 @@ if config and 'file_path' in config:
                     print(f"Containment status response for {hostname} ({host_id}): {json.dumps(containment_status_response, indent=4)}")
                     # Check the containment status response and update the status lists
                     if containment_status_response and containment_status_response['status_code'] == 200 and containment_status_response['body']['resources']:
-                        containment_status = containment_status_response['body']['resources'][0].get('containment_status', None)
+                        containment_status = containment_status_response['body']['resources'][0].get('status', None)
                         if containment_status == "contained":
                             contained_hosts.append(hostname)
                             print(f"{hostname}: Contained")
