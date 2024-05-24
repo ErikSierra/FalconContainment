@@ -2,6 +2,10 @@ import os
 import yaml
 import json
 from falconpy import Hosts, RealTimeResponse, APIError
+import colorama
+from colorama import init, Fore, Back, Style
+
+init()
 
 # Constants
 CONFIG_FILE = 'config.yaml'
@@ -55,21 +59,22 @@ def test_crowdstrike_connection(config):
         # Perform a simple request to verify the connection
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
-            print("Successfully connected to the CrowdStrike API.")
+            print(Fore.BLUE + "Successfully connected to the CrowdStrike API." + Style.RESET_ALL)
             # Debug: Print the response from the API
             print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
-            print("Unauthorized: Please check your API credentials.")
+            print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
             # Debug: Print more details for troubleshooting
-            print(f"Response details: {json.dumps(response, indent=4)}")
+            print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
         else:
-            print(f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}")
+            print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" +
+                  Style.RESET_ALL)
             # Debug: Print more details for troubleshooting
             print(f"Response details: {json.dumps(response, indent=4)}")
     except APIError as e:
-        print(f"APIError during authentication: {e.message}")
+        print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
     except Exception as e:
-        print(f"Error during API connection: {e}")
+        print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
 
 
 # Function to contain a host by its ID
@@ -78,9 +83,9 @@ def contain_host_by_id(falcon_hosts, host_id):
         response = falcon_hosts.perform_action(action_name="contain", ids=[host_id])
         return response
     except APIError as e:
-        print(f"APIError containing host ID {host_id}: {e.message}")
+        print(Fore.RED + f"APIError containing host ID {host_id}: {e.message}" + Style.RESET_ALL)
     except Exception as e:
-        print(f"Error containing host ID {host_id}: {e}")
+        print(Fore.RED + f"Error containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
 
 
@@ -109,9 +114,9 @@ if config and 'file_path' in config:
         try:
             falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
         except APIError as e:
-            print(f"APIError during authentication: {e.message}")
+            print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
         except Exception as e:
-            print(f"Error during API connection: {e}")
+            print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
 
         # Process each hostname
         for hostname in hostnames:
@@ -129,40 +134,44 @@ if config and 'file_path' in config:
                     if containment_response:
                         if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
                             successfully_contained_hosts.append(hostname)
-                            print(f"Successfully contained {hostname} ({host_id})")
+                            print(Fore.BLUE + "Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
                         elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
                             pending_contained_hosts.append(hostname)
-                            print(f"Containment for {hostname} ({host_id}) is pending: {json.dumps(containment_response, indent=4)}")
+                            print(Fore.YELLOW + "Containment for {hostname} ({host_id}) is pending: {json.dumps"
+                                                "(containment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_contain_hosts.append(hostname)
-                            print(f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}")
+                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps
+                            (containment_response, indent=4)}" + Style.RESET_ALL)
                     else:
                         failed_to_contain_hosts.append(hostname)
-                        print(f"Failed to contain {hostname} ({host_id}): No response from containment request")
+                        print(Fore.RED + f"Failed to contain {hostname} ({host_id}): No response from containment "
+                                         f"request" + Style.RESET_ALL)
                 else:
-                    print(f"No host found for hostname: {hostname}")
+                    print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_contain_hosts.append(hostname)
             except APIError as e:
-                print(f"APIError querying host {hostname}: {e.message}")
+                print(Fore.RED + f"APIError querying host {hostname}: {e.message}"  + Style.RESET_ALL)
                 failed_to_contain_hosts.append(hostname)
             except Exception as e:
-                print(f"Error querying host {hostname}: {e}")
+                print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
                 failed_to_contain_hosts.append(hostname)
     else:
-        print("No hostnames found in the specified file.")
+        print(Fore.RED + "No hostnames found in the specified file.")
 else:
     print("File path for hostnames not specified in the configuration file.")
 
 # Print summary
-print("\nSummary:")
-print("Successfully contained hosts:")
+print("\n============================================================================================================"
+      "=============================Summary:")
+print(Fore.BLUE + "Successfully contained hosts:" + Style.RESET_ALL)
 for host in successfully_contained_hosts:
     print(f"- {host}")
 
-print("\nPending containment hosts:")
+print(Fore.YELLOW + "\nPending containment hosts:" + Style.RESET_ALL)
 for host in pending_contained_hosts:
     print(f"- {host}")
 
-print("\nFailed to contain hosts:")
+print(Fore.RED + "\nFailed to contain hosts:" + Style.RESET_ALL)
 for host in failed_to_contain_hosts:
     print(f"- {host}")
