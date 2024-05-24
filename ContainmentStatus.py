@@ -96,9 +96,11 @@ if config and 'file_path' in config:
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     # Pretty print the host details
-                    # print(f"Host details for {hostname} ({host_id}): {json.dumps(response, indent=4)}")
+                    print(f"Host details for {hostname} ({host_id}): {json.dumps(response, indent=4)}")
                     # Check the containment status of the host using its ID
                     containment_status_response = falcon_hosts.get_device_details(ids=[host_id])
+                    # Debug: Print the full containment status response
+                    print(f"Containment status response for {hostname} ({host_id}): {json.dumps(containment_status_response, indent=4)}")
                     # Check the containment status response and update the status lists
                     if containment_status_response and containment_status_response['status_code'] == 200 and containment_status_response['body']['resources']:
                         containment_status = containment_status_response['body']['resources'][0].get('containment_status', None)
