@@ -107,7 +107,7 @@ if config and 'file_path' in config:
                         if containment_status == "contained":
                             contained_hosts.append(hostname)
                             print(f"{hostname}: Contained")
-                        elif containment_status == "pending_containment":
+                        elif containment_status == "containment_pending":
                             pending_hosts.append(hostname)
                             print(f"{hostname}: Containment pending")
                         else:
