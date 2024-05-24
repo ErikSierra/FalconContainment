@@ -31,13 +31,13 @@ The project aims to simplify the security operations process by automating the c
    source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
 
 **Create .txt file**
-1. Create a file named computers.txt in the same directory as your script. List each hostname on a new line that you'd like Crowdstrike to contain (When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
+1. Create a file named computers.txt in the same directory as your script. List each hostname on a new line that you'd like Crowdstrike to contain:
 ```bash
 computer1
 computer2
 computer3
 ```
-
+(When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
 **Create .YAML file**
 
 2. Create a file named config.YAML in the same directory as your scrip with the following information
