@@ -2,7 +2,6 @@ import os
 import yaml
 import json
 from falconpy import Hosts, RealTimeResponse, APIError
-import colorama
 from colorama import init, Fore, Back, Style
 
 init()
