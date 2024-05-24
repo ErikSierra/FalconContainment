@@ -6,6 +6,7 @@ from falconpy import Hosts, APIError
 # Constants
 CONFIG_FILE = 'config.yaml'
 
+
 # Function to load configuration
 def load_config(file_path):
     if not os.path.isfile(file_path):
@@ -19,6 +20,7 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         return None
 
+
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
     if not os.path.isfile(file_path):
@@ -31,6 +33,7 @@ def read_hostnames(file_path):
     except Exception as e:
         print(f"Error reading '{file_path}': {e}")
         return []
+
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(config):
@@ -59,6 +62,7 @@ def test_crowdstrike_connection(config):
         print(f"APIError during authentication: {e.message}")
     except Exception as e:
         print(f"Error during API connection: {e}")
+
 
 # Load the configuration
 config = load_config(CONFIG_FILE)
