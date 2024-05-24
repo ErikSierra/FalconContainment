@@ -23,21 +23,40 @@ The project aims to simplify the security operations process by automating the c
 - Insert these credentials in the YAML file.
 
 ## Setup
-
-1. Clone this repository to your local machine.
+**Virtual Environment**
+1. Clone this repository to your local machine/download ZIP
 2. (Optional but recommended) Create a virtual environment and activate it:
    ```bash
    python -m venv venv
    source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
-  
-## Usage
-Testing Connection
 
-To test the connection to the CrowdStrike API:
+**Create .txt file**
+1. Create a file named computers.txt in the same directory as your script. List each hostname on a new line that you'd like Crowdstrike to contain (When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
+```bash
+computer1
+computer2
+computer3
+```
 
-1. Set the following fields in the YAML file to reflect the correct information
-- client_id
-- client_secret
+**Create .YAML file**
+
+2. Create a file named config.YAML in the same directory as your scrip with the following information
+```bash
+api:
+  client_id: <your client ID>
+  client_secret: <your client secret>
+```
+
+(replace backets with your own Crowdstrike API credentials)
+
+## Testing (optional)
+To test functionality/readability of .txt file:
+1. Run the simulation test script:
+```bash
+python NoAPIsim.py
+```
+
+To test connection to Crowdstrike API:
 
 2. Run the connection test script:
 
@@ -45,38 +64,34 @@ To test the connection to the CrowdStrike API:
 python APIconnectionTest.py
 ```
 
-## Containing Hosts
-To contain specified hosts based on a list of hostnames:
-1. Create a file named computers.txt in the same directory as your script. List each hostname on a new line:
-```bash
-computer1
-computer2
-computer3
-```
+## Containment steps
+To contain the hostnames listed in the .txt file, run the containment script:
 
-2. Set your YAML file to reflect the name of this .txt file 
-
-## Run the containment script:
 ```bash
 python Containment.py
 ```
 
 ## Error Handling
 The scripts include basic error handling to manage issues such as:
-- Handling API errors that may occur during authentication, querying and containing hosts, and printing the relevant error messages to the console.
-- Handling common file I/O errors such as FileNotFoundError and printing the relevant error messages to the console.
-- Checking if the configuration file has the required API credentials and file path values, exiting the script if any of them are missing.
-- Checking if the hostname file exists and is not empty, exiting the script if it is missing or empty.
+- Checking if the configuration file exists and can be read.
+- Checking if the file containing the hostnames exists and can be read.
+- Checking if the configuration file contains the necessary information for connecting to the CrowdStrike API.
+- Checking if the connection to the CrowdStrike API is successful.
+- Handling of API errors and exceptions that may occur during the connection and containment process.
+- Differentiating between different HTTP response codes and errors returned by the CrowdStrike API and categorizing them as either successful, pending, or failed to contain a host.
+- Printing informative error messages for easy debugging.
 
 ## Notes
-- Ensure your computers.txt file is correctly formatted with one hostname per line.
-- The scripts rely on the falconpy library to interact with the CrowdStrike API.
-- Adjust the API credentials and file path in the YAML file as needed according to your environment. 
+- Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (YAML).
+- Make sure you provide the correct file path for the (.txt) file containing the hostnames, as it is required for the program to process the hosts.
+- Review the configuration file to ensure that it contains the right information, including the client ID and client secret, which are required for authentication to the API.
+- Review the limitations of the API, which may affect the success rate of containing hosts.
+- Keep an eye on the overall status of containment, as well as the status of individual hosts, in your Crowdstrike tool and script's output. 
 
 ## Screenshots
 
 ![Screenshot of NoAPIsim.py](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
-
+![Screenshot of Containment.py](https://i.imgur.com/vAXFnpb.png)
 
   ## References
 
