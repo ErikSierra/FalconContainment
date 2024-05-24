@@ -37,7 +37,9 @@ computer1
 computer2
 computer3
 ```
-(When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
+
+ - (When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
+
 **Create .YAML file**
 
 2. Create a file named config.YAML in the same directory as your scrip with the following information
@@ -47,7 +49,7 @@ api:
   client_secret: <your client secret>
 ```
 
-(replace backets with your own Crowdstrike API credentials)
+- (replace backets with your own Crowdstrike API credentials)
 
 ## Testing (optional)
 To test functionality/readability of .txt file:
