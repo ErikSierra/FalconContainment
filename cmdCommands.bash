@@ -12,13 +12,14 @@ source venv/bin/activate
 # Install required Python packages
 pip install -r requirements.txt
 
-# Set CrowdStrike API credentials (Windows)
-set CROWDSTRIKE_CLIENT_ID=your_client_id_here
-set CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
-
-# Set CrowdStrike API credentials (Unix-like systems)
-# export CROWDSTRIKE_CLIENT_ID=your_client_id_here
-# export CROWDSTRIKE_CLIENT_SECRET=your_client_secret_here
-
 # Run the connection test script
-python test_crowdstrike_connection.py
+python APIconnectionTest.py
+
+# Run the containment test simulation (without API)
+python NoAPIsim.py
+
+# Run the actual crowdstrike containment script
+python ContainmentStatus.py
+
+# Run the status update for contained hosts
+python ContainmentStatus.py
