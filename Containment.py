@@ -4,6 +4,8 @@ import json
 import sys
 from falconpy import Hosts, RealTimeResponse, APIError
 from colorama import init, Fore, Back, Style
+import subprocess
+import sys
 
 init()
 
@@ -180,3 +182,16 @@ for host in pending_contained_hosts:
 print(Fore.RED + "\nFailed to contain hosts:" + Style.RESET_ALL)
 for host in failed_to_contain_hosts:
     print(Fore.RED + f"- {host}")
+
+status = input("===============================================================================\n"
+               "Do you want to re-check the status of containment for these hosts? (Y/N) ")
+if status.lower() == 'n':
+    print("Exiting the script...")
+    exit()
+elif status.lower() == 'y':
+    print("Running ContainmentStatus.py and checking status of hosts.")
+    venv_python = sys.executable
+    containment_script = "ContainmentStatus.py"
+    subprocess.call([venv_python, containment_script])
+else:
+    print("Invalid input. Please enter Y or N.")

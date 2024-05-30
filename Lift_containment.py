@@ -3,6 +3,8 @@ import yaml
 import json
 from falconpy import Hosts, RealTimeResponse, APIError
 from colorama import init, Fore, Back, Style
+import subprocess
+import sys
 
 init()
 
@@ -60,11 +62,11 @@ def test_crowdstrike_connection(config):
         if response["status_code"] == 200:
             print(Fore.BLUE + "Successfully connected to the CrowdStrike API." + Style.RESET_ALL)
             # Debug: Print the response from the API
-            print(f"API Response: {json.dumps(response, indent=4)}")
+            # print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
             # Debug: Print more details for troubleshooting
-            print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
         else:
             print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" +
                   Style.RESET_ALL)
@@ -103,7 +105,7 @@ failed_to_uncontain_hosts = []
 if config and 'file_path' in config:
     hostnames = read_hostnames(config['file_path'])
     if hostnames:
-        print(f"Read hostnames: {hostnames}")
+        # print(f"Read hostnames: {hostnames}")
 
         # Extract API credentials
         client_id = config['api']['client_id']
@@ -136,8 +138,8 @@ if config and 'file_path' in config:
                             print(Fore.BLUE + "Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
                         elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
                             pending_uncontained_hosts.append(hostname)
-                            print(Fore.YELLOW + "Un-containment for {hostname} ({host_id}) is pending: {json.dumps"
-                                                "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
+                            # print(Fore.YELLOW + "Un-containment for {hostname} ({host_id}) is pending: {json.dumps"
+                            #                     "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_uncontain_hosts.append(hostname)
                             print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
@@ -162,14 +164,27 @@ else:
 # Print summary
 print("\n============================================================================================================"
       "============================")
-print(Fore.BLUE + "Successfully un-contained hosts:" + Style.RESET_ALL)
+print(Fore.BLUE + "The following hosts have had their containments lifted:" + Style.RESET_ALL)
 for host in successfully_uncontained_hosts:
     print(f"- {host}")
 
-print(Fore.YELLOW + "\nPending un-containment hosts:" + Style.RESET_ALL)
+print(Fore.YELLOW + "\nThe following hosts are still pending containment lift:" + Style.RESET_ALL)
 for host in pending_uncontained_hosts:
     print(f"- {host}")
 
-print(Fore.RED + "\nFailed to un-contain hosts:" + Style.RESET_ALL)
+print(Fore.RED + "\nThe containment lift operation failed for the following hosts:" + Style.RESET_ALL)
 for host in failed_to_uncontain_hosts:
     print(f"- {host}")
+
+status = input("Do you want to re-check the status of containment for these hosts? (Y/N) ")
+if status.lower() == 'n':
+    print("Exiting the script...")
+    exit()
+elif status.lower() == 'y':
+    print("Running ContainmentStatus.py and checking status of hosts.")
+    venv_python = sys.executable
+    containment_script = "ContainmentStatus.py"
+    subprocess.call([venv_python, containment_script])
+else:
+    print("Invalid input. Please enter Y or N.")
+

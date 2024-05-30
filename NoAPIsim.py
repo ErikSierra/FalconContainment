@@ -5,10 +5,9 @@ This script does not perform any official API containment within Crowdstrike Fal
 Use 'Containment.py' for Crowdstrike API containment.
 Refer to the GitHub repository for instructions.
 """
-
-import os
 import yaml
-
+import subprocess
+import sys
 
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
@@ -61,3 +60,15 @@ for hostname in hostnames:
     # Simulate containing the host using its ID
     contain_host_by_id_simulated(simulated_host_id)
     print(f"Simulated containment response for {hostname} ({simulated_host_id})")
+
+status = input("Do you want to re-check the status of containment for these hosts? (Y/N) ")
+if status.lower() == 'n':
+    print("Exiting the script...")
+    exit()
+elif status.lower() == 'y':
+    print("Running ContainmentStatus.py and checking status of hosts.")
+    venv_python = sys.executable
+    containment_script = "ContainmentStatus.py"
+    subprocess.call([venv_python, containment_script])
+else:
+    print("Invalid input. Please enter Y or N.")
