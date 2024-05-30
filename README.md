@@ -73,6 +73,13 @@ To contain the hostnames listed in the .txt file, run the containment script:
 python Containment.py
 ```
 
+## Uncontainment steps
+To uncontain the hostnames listed in the .txt file, run the uncontainment script:
+
+```bash
+python Un-Containment.py
+```
+
 ## Error Handling
 The scripts include basic error handling to manage issues such as:
 - Checking if the configuration file exists and can be read.
