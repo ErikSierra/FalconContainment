@@ -4,6 +4,7 @@ import json
 from falconpy import Hosts, APIError
 import colorama
 from colorama import init, Fore, Back, Style
+import sys
 
 init()
 # Constants
@@ -14,28 +15,28 @@ CONFIG_FILE = 'config.yaml'
 def load_config(file_path):
     if not os.path.isfile(file_path):
         print(Fore.RED + f"Error: Configuration file '{file_path}' not found." + Style.RESET_ALL)
-        return None
+        sys.exit(1)
     try:
         with open(file_path, 'r') as f:
             config = yaml.safe_load(f)
             return config
     except yaml.YAMLError as e:
         print(Fore.RED + f"Error reading configuration file: {e}" + Style.RESET_ALL)
-        return None
+        sys.exit(1)
 
 
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
     if not os.path.isfile(file_path):
         print(Fore.RED + f"Error: The file '{file_path}' was not found." + Style.RESET_ALL)
-        return []
+        sys.exit(1)
     try:
         with open(file_path, 'r') as file:
             hostnames = [line.strip() for line in file.readlines()]
         return hostnames
     except Exception as e:
         print(Fore.RED + f"Error reading '{file_path}': {e}" + Style.RESET_ALL)
-        return []
+        sys.exit(1)
 
 
 # Function to test the connection to the CrowdStrike API
@@ -48,7 +49,7 @@ def test_crowdstrike_connection(config):
         client_secret = config['api']['client_secret']
     except KeyError as e:
         print(Fore.RED + f"Missing API credential in configuration file: {e}" + Style.RESET_ALL)
-        return
+        sys.exit(1)
 
     try:
         falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
@@ -58,13 +59,17 @@ def test_crowdstrike_connection(config):
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
             # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
+            sys.exit(1)
         else:
             print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" + Style.RESET_ALL)
             # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
+            sys.exit(1)
     except APIError as e:
         print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
+        sys.exit(1)
     except Exception as e:
         print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
+        sys.exit(1)
 
 
 # Load the configuration
@@ -156,12 +161,12 @@ while rerun_check:
     for host in pending_hosts:
         print(f"{host}")
 
-    print(Fore.RED + "\nNon-contained hosts:" )
+    print(Fore.RED + "\nNon-contained hosts:")
     for host in failed_hosts:
         print(f"{host}")
 
     # Ask user if they want to rerun the check again
-    user_input = input("\n============================================================================================"
+    user_input = input(Fore.BLUE + "\n============================================================================================"
                        "=============================================\nDo you want to rerun the check again? (Y/N) ")
     if user_input.lower() == "n":
         rerun_check = False
