@@ -63,7 +63,7 @@ def test_crowdstrike_connection(config):
             # Debug: Print the response from the API
             # print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
-            print(Fore.RED + "Unauthorized: Please check your API credentials in the .YAML file." + Style.RESET_ALL)
+            print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
             sys.exit(1)
             # Debug: Print more details for troubleshooting
             # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)

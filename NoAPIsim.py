@@ -30,7 +30,7 @@ def contain_host_by_id_simulated(host_id):
     pass
 
 
-# Read the configuration YAML file
+# Read the configuration .yaml file
 config_file_path = "config.yaml"
 try:
     with open(config_file_path) as f:
