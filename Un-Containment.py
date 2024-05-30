@@ -157,7 +157,7 @@ if config and 'file_path' in config:
                     print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_uncontain_hosts.append(hostname)
             except APIError as e:
-                print(Fore.RED + f"APIError querying host {hostname}: {e.message}"  + Style.RESET_ALL)
+                print(Fore.RED + f"APIError querying host {hostname}: {e.message}" + Style.RESET_ALL)
                 failed_to_uncontain_hosts.append(hostname)
             except Exception as e:
                 print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
