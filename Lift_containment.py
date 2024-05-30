@@ -79,7 +79,7 @@ def test_crowdstrike_connection(config):
 # Function to un-contain a host by its ID
 def uncontain_host_by_id(falcon_hosts, host_id):
     try:
-        response = falcon_hosts.perform_action(action_name="uncontain", ids=[host_id])
+        response = falcon_hosts.perform_action(action_name="lift_containment", ids=[host_id])
         return response
     except APIError as e:
         print(Fore.RED + f"APIError un-containing host ID {host_id}: {e.message}" + Style.RESET_ALL)

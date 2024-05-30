@@ -77,7 +77,7 @@ python Containment.py
 To uncontain the hostnames listed in the .txt file, run the uncontainment script:
 
 ```bash
-python Un-Containment.py
+python Lift_containment.py
 ```
 
 ## Error Handling
