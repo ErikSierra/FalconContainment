@@ -148,7 +148,7 @@ if config and 'file_path' in config:
                         else:
                             failed_to_contain_hosts.append(hostname)
                             print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
-                    els
+                    else:
                         failed_to_contain_hosts.append(hostname)
                         print(Fore.RED + f"Failed to contain {hostname} ({host_id}): No response from containment "
                                          f"request" + Style.RESET_ALL)
