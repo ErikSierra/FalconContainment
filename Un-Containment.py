@@ -61,7 +61,7 @@ def test_crowdstrike_connection(config):
         if response["status_code"] == 200:
             print(Fore.BLUE + "Successfully connected to the CrowdStrike API." + Style.RESET_ALL)
             # Debug: Print the response from the API
-            print(f"API Response: {json.dumps(response, indent=4)}")
+            # print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
             sys.exit(1)
