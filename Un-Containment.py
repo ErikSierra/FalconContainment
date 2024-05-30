@@ -148,7 +148,7 @@ if config and 'file_path' in config:
                                                 "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_uncontain_hosts.append(hostname)
-                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
+                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
                     else:
                         failed_to_uncontain_hosts.append(hostname)
                         print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment "
