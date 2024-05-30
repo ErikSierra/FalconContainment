@@ -136,17 +136,18 @@ if config and 'file_path' in config:
                     containment_response = contain_host_by_id(falcon_hosts, host_id)
                     # Check the containment response
                     if containment_response:
-                        if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
+                        if containment_response["status_code"] == 200 and not containment_response["body"].get(
+                                "errors"):
                             successfully_contained_hosts.append(hostname)
                             print(Fore.BLUE + "Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
-                        elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
+                        elif containment_response["status_code"] == 202 and not containment_response["body"].get(
+                                "errors"):
                             pending_contained_hosts.append(hostname)
                             print(Fore.YELLOW + "Containment for {hostname} ({host_id}) is pending: {json.dumps"
                                                 "(containment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_contain_hosts.append(hostname)
-                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps
-                            (containment_response, indent=4)}" + Style.RESET_ALL)
+                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
                     else:
                         failed_to_contain_hosts.append(hostname)
                         print(Fore.RED + f"Failed to contain {hostname} ({host_id}): No response from containment "
@@ -155,7 +156,7 @@ if config and 'file_path' in config:
                     print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_contain_hosts.append(hostname)
             except APIError as e:
-                print(Fore.RED + f"APIError querying host {hostname}: {e.message}"  + Style.RESET_ALL)
+                print(Fore.RED + f"APIError querying host {hostname}: {e.message}" + Style.RESET_ALL)
                 failed_to_contain_hosts.append(hostname)
             except Exception as e:
                 print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
