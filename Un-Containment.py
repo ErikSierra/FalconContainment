@@ -139,20 +139,24 @@ if config and 'file_path' in config:
                     uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
                     # Check the un-containment response
                     if uncontainment_response:
-                        if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
+                        if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get(
+                                "errors"):
                             successfully_uncontained_hosts.append(hostname)
                             print(Fore.BLUE + "Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
-                        elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
+                        elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get(
+                                "errors"):
                             pending_uncontained_hosts.append(hostname)
-                            print(Fore.YELLOW + "Un-containment for {hostname} ({host_id}) is pending: {json.dumps"
-                                                "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
+                            # print(Fore.YELLOW + "Un-containment for {hostname} ({host_id}) is pending: {json.dumps"
+                            # "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_uncontain_hosts.append(hostname)
-                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
+                            print(
+                                Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
                     else:
                         failed_to_uncontain_hosts.append(hostname)
-                        print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment "
-                                         f"request" + Style.RESET_ALL)
+                        print(
+                            Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment "
+                                       f"request" + Style.RESET_ALL)
                 else:
                     print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_uncontain_hosts.append(hostname)

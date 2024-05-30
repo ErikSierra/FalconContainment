@@ -143,8 +143,8 @@ if config and 'file_path' in config:
                         elif containment_response["status_code"] == 202 and not containment_response["body"].get(
                                 "errors"):
                             pending_contained_hosts.append(hostname)
-                            print(Fore.YELLOW + "Containment for {hostname} ({host_id}) is pending: {json.dumps"
-                                                "(containment_response, indent=4)}" + Style.RESET_ALL)
+                            # print(Fore.YELLOW + "Containment for {hostname} ({host_id}) is pending: {json.dumps"
+                            #                     "(containment_response, indent=4)}" + Style.RESET_ALL)
                         else:
                             failed_to_contain_hosts.append(hostname)
                             print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
