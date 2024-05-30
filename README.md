@@ -40,9 +40,9 @@ computer3
 
  - (When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
 
-**Create .YAML file**
+**Create .yaml file**
 
-2. Create a file named config.YAML in the same directory as your scrip with the following information
+2. Create a file named config.yaml in the same directory as your scrip with the following information
 ```bash
 api:
   client_id: <your client ID>
@@ -91,7 +91,7 @@ The scripts include basic error handling to manage issues such as:
 - Printing informative error messages for easy debugging.
 
 ## Notes
-- Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (YAML).
+- Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (.yaml).
 - Make sure you provide the correct file path for the (.txt) file containing the hostnames, as it is required for the program to process the hosts.
 - Review the configuration file to ensure that it contains the right information, including the client ID and client secret, which are required for authentication to the API.
 - Review the limitations of the API, which may affect the success rate of containing hosts.
