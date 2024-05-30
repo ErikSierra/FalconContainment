@@ -162,15 +162,15 @@ else:
 
 # Print summary
 print("\n============================================================================================================"
-      "=============================\nSummary:")
+      "=============================")
 print(Fore.BLUE + "Successfully un-contained hosts:" + Style.RESET_ALL)
 for host in successfully_uncontained_hosts:
-    print(f"- {host}")
+    print(Fore.BLUE + "- {host}")
 
 print(Fore.YELLOW + "\nPending un-containment hosts:" + Style.RESET_ALL)
 for host in pending_uncontained_hosts:
-    print(f"- {host}")
+    print(Fore.YELLOW + f"- {host}")
 
 print(Fore.RED + "\nFailed to un-contain hosts:" + Style.RESET_ALL)
 for host in failed_to_uncontain_hosts:
-    print(f"- {host}")
+    print(Fore.RED + f"- {host}")

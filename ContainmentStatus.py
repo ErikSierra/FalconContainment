@@ -57,10 +57,10 @@ def test_crowdstrike_connection(config):
             print("Successfully connected to the CrowdStrike API.")
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
-            print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
         else:
             print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" + Style.RESET_ALL)
-            print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
     except APIError as e:
         print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
     except Exception as e:
@@ -147,16 +147,16 @@ while rerun_check:
 
     # Print summary
     print("==========================================================================================================="
-          "==============================\nSummary:" + Style.RESET_ALL)
+          "==============================")
     print(Fore.BLUE + "Contained hosts:")
     for host in contained_hosts:
         print(f"{host}")
 
-    print(Fore.YELLOW + "\nPending containment hosts:" + Style.RESET_ALL)
+    print(Fore.YELLOW + "\nPending containment hosts:")
     for host in pending_hosts:
         print(f"{host}")
 
-    print(Fore.RED + "\nNon-contained hosts:" + Style.RESET_ALL)
+    print(Fore.RED + "\nNon-contained hosts:" )
     for host in failed_hosts:
         print(f"{host}")
 
