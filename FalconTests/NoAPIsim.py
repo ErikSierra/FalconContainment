@@ -66,13 +66,12 @@ def contain_host_by_id(falcon_hosts, host_id):
 
 
 def display_results(success, pending, failed):
-    results_window = tk.Toplevel(root)
-    results_window.title("Containment Results")
-    results_window.configure(bg='#191970')
+    for widget in frame.winfo_children():
+        widget.destroy()
 
     def create_section(title, host_list, color):
-        tk.Label(results_window, text=title, bg='#191970', fg=color, font=('Helvetica', '14', 'bold')).pack(pady=5)
-        listbox = tk.Listbox(results_window, bg='#191970', fg=color, font=('Helvetica', '12'))
+        tk.Label(frame, text=title, bg='#191970', fg=color, font=('Helvetica', '14', 'bold')).pack(pady=5)
+        listbox = tk.Listbox(frame, bg='#191970', fg=color, font=('Helvetica', '12'))
         listbox.pack(fill='both', padx=20, pady=5)
         for hostname in host_list:
             listbox.insert(tk.END, hostname)
@@ -82,10 +81,10 @@ def display_results(success, pending, failed):
     create_section("Pending containment hosts:", pending, '#FFD700')
     create_section("Failed to contain hosts:", failed, '#FF0000')
 
-    tk.Button(results_window, text="Re-check Containment Status", command=run_containment_status, bg='#8FBC8F',
+    tk.Button(frame, text="Re-check Containment Status", command=run_containment_status, bg='#8FBC8F',
               fg='white', font=('Helvetica', '12', 'bold')).pack(pady=10, padx=10)
 
-    tk.Button(results_window, text="Exit", command=results_window.destroy, bg='#8FBC8F', fg='white',
+    tk.Button(frame, text="Exit", command=root.destroy, bg='#8FBC8F', fg='white',
               font=('Helvetica', '12', 'bold')).pack(pady=10, padx=10)
 
 
@@ -137,25 +136,28 @@ def start_containment():
 root = tk.Tk()
 root.title("CrowdStrike Host Containment")
 root.geometry("800x600")
-root.configure(bg='#191970')
 
-# Title logo
-logo_frame = tk.Frame(root, bg='#191970')
-logo_frame.pack()
+# Load and set the background image
+bg_image = tk.PhotoImage(file='background.png')
+bg_label = tk.Label(root, image=bg_image)
+bg_label.place(relwidth=1, relheight=1)
 
-# Replace 'crowdstrike-logo.png' with the path to your logo file
-# logo = tk.PhotoImage(file='crowdstrike-logo.png')
-# logo_label = tk.Label(logo_frame, image=logo, bg='#191970', bd=0)
-# logo_label.pack()
-
-# Main frame
+# Main frame with transparent background
 frame = tk.Frame(root, bg='#191970')
-frame.pack(pady=20, padx=50, fill='both')
+frame.pack(pady=20, padx=50, fill='both', expand=True)
+frame.place(relx=0.5, rely=0.5, anchor='center')
 
+# Title label
 tk.Label(frame, text="Welcome to the CrowdStrike Host Containment Tool", bg='#191970', fg='#00BFFF', font=('Helvetica', '20', 'bold')).pack(pady=10, padx=10, fill='both')
 
+# Start button
 start_button = tk.Button(frame, text="Start Containment", command=start_containment, bg='#8FBC8F', fg='white',
                          font=('Helvetica', '16', 'bold'), pady=20, padx=20)
 start_button.pack(pady=10, padx=10)
+
+# Exit button
+exit_button = tk.Button(frame, text="Exit", command=root.destroy, bg='#8FBC8F', fg='white',
+                        font=('Helvetica', '16', 'bold'), pady=20, padx=20)
+exit_button.pack(pady=10, padx=10)
 
 root.mainloop()
