@@ -70,7 +70,7 @@ def display_results(success, pending, failed):
         widget.destroy()
 
     def create_section(title, host_list, color):
-        tk.Label(frame, text=title, bg='#191970', fg=color, font=('Helvetica', '14', 'bold')).pack(pady=5)
+        tk.Label(frame, text=title, bg='#808080', fg=color, font=('Helvetica', '14', 'bold')).pack(pady=5)
         listbox = tk.Listbox(frame, bg='#191970', fg=color, font=('Helvetica', '12'))
         listbox.pack(fill='both', padx=20, pady=5)
         for hostname in host_list:
@@ -143,7 +143,7 @@ bg_label = tk.Label(root, image=bg_image)
 bg_label.place(relwidth=1, relheight=1)
 
 # Main frame with transparent background
-frame = tk.Frame(root, bg='#191970')
+frame = tk.Frame(root, bg='#808080')
 frame.pack(pady=20, padx=50, fill='both', expand=True)
 frame.place(relx=0.5, rely=0.5, anchor='center')
 
