@@ -70,22 +70,23 @@ def contain_host_by_id(falcon_hosts, host_id):
 def display_results(success, pending, failed):
     results_window = tk.Toplevel(root)
     results_window.title("Containment Results")
+    results_window.configure(bg='black')
 
-    tk.Label(results_window, text="Successfully contained hosts:", fg="blue").pack()
+    tk.Label(results_window, text="Successfully contained hosts:", fg="blue", bg='black', font=('Helvetica', 16, 'bold')).pack(pady=(10, 5))
     for host in success:
-        tk.Label(results_window, text=f"- {host}", fg="blue").pack()
+        tk.Label(results_window, text=f"- {host}", fg="blue", bg='black', font=('Helvetica', 12)).pack(anchor='w', padx=20)
 
-    tk.Label(results_window, text="\nPending containment hosts:", fg="yellow").pack()
+    tk.Label(results_window, text="\nPending containment hosts:", fg="yellow", bg='black', font=('Helvetica', 16, 'bold')).pack(pady=(10, 5))
     for host in pending:
-        tk.Label(results_window, text=f"- {host}", fg="yellow").pack()
+        tk.Label(results_window, text=f"- {host}", fg="yellow", bg='black', font=('Helvetica', 12)).pack(anchor='w', padx=20)
 
-    tk.Label(results_window, text="\nFailed to contain hosts:", fg="red").pack()
+    tk.Label(results_window, text="\nFailed to contain hosts:", fg="red", bg='black', font=('Helvetica', 16, 'bold')).pack(pady=(10, 5))
     for host in failed:
-        tk.Label(results_window, text=f"- {host}", fg="red").pack()
+        tk.Label(results_window, text=f"- {host}", fg="red", bg='black', font=('Helvetica', 12)).pack(anchor='w', padx=20)
 
-    tk.Label(results_window, text="\n").pack()
-    tk.Button(results_window, text="Re-check Containment Status", command=run_containment_status).pack()
-    tk.Button(results_window, text="Exit", command=results_window.destroy).pack()
+    tk.Label(results_window, text="\n", bg='black').pack()
+    tk.Button(results_window, text="Re-check Containment Status", command=run_containment_status, bg='white', fg='black').pack(pady=(5, 10))
+    tk.Button(results_window, text="Exit", command=results_window.destroy, bg='white', fg='black').pack(pady=(0, 20))
 
 
 # Mock function to simulate running ContainmentStatus.py
@@ -133,12 +134,12 @@ def start_containment():
 # GUI setup
 root = tk.Tk()
 root.title("CrowdStrike Host Containment")
+root.configure(bg='black')
 
-frame = tk.Frame(root)
+frame = tk.Frame(root, bg='black')
 frame.pack(pady=20)
 
-start_button = tk.Button(frame, text="Start Containment", command=start_containment)
+start_button = tk.Button(frame, text="Start Containment", command=start_containment, bg='white', fg='black')
 start_button.pack()
 
 root.mainloop()
-
