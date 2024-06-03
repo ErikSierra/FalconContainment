@@ -9,9 +9,8 @@ Refer to the GitHub repository for instructions.
 import os
 import yaml
 import sys
-import subprocess
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox
 
 # Constants
 CONFIG_FILE = 'config.yaml'
@@ -49,7 +48,7 @@ def test_crowdstrike_connection(config, status_label):
     if not config:
         return
 
-    conn_success = True # Simulate successful connection
+    conn_success = True  # Simulate successful connection
     if conn_success:
         status_label.config(text="Connection Status: Successful!", fg='#48D1CC')
         messagebox.showinfo("Success", "Successfully connected to the CrowdStrike API (simulated).")
@@ -67,37 +66,26 @@ def contain_host_by_id(falcon_hosts, host_id):
 
 
 def display_results(success, pending, failed):
-    success_label = tk.Label(frame, text="Successfully contained hosts:", bg='#191970', fg='#00FFFF', font=('Helvetica', '14', 'bold'), padx=20, pady=10)
-    success_label.pack(fill='both')
+    results_window = tk.Toplevel(root)
+    results_window.title("Containment Results")
+    results_window.configure(bg='#191970')
 
-    success_listbox = tk.Listbox(frame, bg='#191970', fg='#00FFFF', font=('Helvetica', '12'))
-    success_listbox.pack(fill='both')
+    def create_section(title, host_list, color):
+        tk.Label(results_window, text=title, bg='#191970', fg=color, font=('Helvetica', '14', 'bold')).pack(pady=5)
+        listbox = tk.Listbox(results_window, bg='#191970', fg=color, font=('Helvetica', '12'))
+        listbox.pack(fill='both', padx=20, pady=5)
+        for hostname in host_list:
+            listbox.insert(tk.END, hostname)
+        return listbox
 
-    for hostname in success:
-        success_listbox.insert(tk.END, hostname)
+    create_section("Successfully contained hosts:", success, '#00FFFF')
+    create_section("Pending containment hosts:", pending, '#FFD700')
+    create_section("Failed to contain hosts:", failed, '#FF0000')
 
-    pending_label = tk.Label(frame, text="Pending containment hosts:", bg='#191970', fg='#FFD700', font=('Helvetica', '14', 'bold'), padx=20, pady=10)
-    pending_label.pack(fill='both')
-
-    pending_listbox = tk.Listbox(frame, bg='#191970', fg='#FFD700', font=('Helvetica', '12'))
-    pending_listbox.pack(fill='both')
-
-    for hostname in pending:
-        pending_listbox.insert(tk.END, hostname)
-
-    failed_label = tk.Label(frame, text="Failed to contain hosts:", bg='#191970', fg='#FF0000', font=('Helvetica', '14', 'bold'), padx=20, pady=10)
-    failed_label.pack(fill='both')
-
-    failed_listbox = tk.Listbox(frame, bg='#191970', fg='#FF0000', font=('Helvetica', '12'))
-    failed_listbox.pack(fill='both')
-
-    for hostname in failed:
-        failed_listbox.insert(tk.END, hostname)
-
-    tk.Button(frame, text="Re-check Containment Status", command=run_containment_status, bg='#8FBC8F',
+    tk.Button(results_window, text="Re-check Containment Status", command=run_containment_status, bg='#8FBC8F',
               fg='white', font=('Helvetica', '12', 'bold')).pack(pady=10, padx=10)
 
-    tk.Button(frame, text="Exit", command=root.destroy, bg='#8FBC8F', fg='white',
+    tk.Button(results_window, text="Exit", command=results_window.destroy, bg='#8FBC8F', fg='white',
               font=('Helvetica', '12', 'bold')).pack(pady=10, padx=10)
 
 
@@ -144,6 +132,7 @@ def start_containment():
     else:
         messagebox.showerror("Error", f"Configuration file '{CONFIG_FILE}' not found.")
 
+
 # GUI setup
 root = tk.Tk()
 root.title("CrowdStrike Host Containment")
@@ -154,9 +143,10 @@ root.configure(bg='#191970')
 logo_frame = tk.Frame(root, bg='#191970')
 logo_frame.pack()
 
-logo = tk.PhotoImage(file='crowdstrike-logo.png')
-logo_label = tk.Label(logo_frame, image=logo, bg='#191970', bd=0)
-logo_label.pack()
+# Replace 'crowdstrike-logo.png' with the path to your logo file
+# logo = tk.PhotoImage(file='crowdstrike-logo.png')
+# logo_label = tk.Label(logo_frame, image=logo, bg='#191970', bd=0)
+# logo_label.pack()
 
 # Main frame
 frame = tk.Frame(root, bg='#191970')
@@ -165,7 +155,7 @@ frame.pack(pady=20, padx=50, fill='both')
 tk.Label(frame, text="Welcome to the CrowdStrike Host Containment Tool", bg='#191970', fg='#00BFFF', font=('Helvetica', '20', 'bold')).pack(pady=10, padx=10, fill='both')
 
 start_button = tk.Button(frame, text="Start Containment", command=start_containment, bg='#8FBC8F', fg='white',
-                          font=('Helvetica', '16', 'bold'), pady=20, padx=20)
+                         font=('Helvetica', '16', 'bold'), pady=20, padx=20)
 start_button.pack(pady=10, padx=10)
 
 root.mainloop()
