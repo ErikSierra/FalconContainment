@@ -5,70 +5,140 @@ This script does not perform any official API containment within Crowdstrike Fal
 Use 'Containment.py' for Crowdstrike API containment.
 Refer to the GitHub repository for instructions.
 """
+import os
 import yaml
-import subprocess
 import sys
+from colorama import init, Fore, Style
+import subprocess
+import tkinter as tk
+from tkinter import messagebox, filedialog
+
+init()
+
+# Constants
+CONFIG_FILE = 'config.yaml'
+
+
+# Function to load configuration
+def load_config(file_path):
+    if not os.path.isfile(file_path):
+        messagebox.showerror("Error", f"Configuration file '{file_path}' not found.")
+        sys.exit(1)
+
+    try:
+        with open(file_path, 'r') as f:
+            config = yaml.safe_load(f)
+            return config
+    except yaml.YAMLError as e:
+        messagebox.showerror("Error", f"Error reading configuration file: {e}")
+        sys.exit(1)
+
 
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
+    if not os.path.isfile(file_path):
+        messagebox.showerror("Error", f"The file '{file_path}' was not found.")
+        sys.exit(1)
     try:
         with open(file_path, 'r') as file:
-            # Read all lines and remove extra spaces/newlines
             hostnames = [line.strip() for line in file.readlines()]
         return hostnames
-    except FileNotFoundError:
-        print(f"Error: The file {file_path} was not found.")
-        return []
     except Exception as e:
-        print(f"Error reading {file_path}: {e}")
-        return []
+        messagebox.showerror("Error", f"Error reading '{file_path}': {e}")
+        sys.exit(1)
 
 
-# Simulated function to contain a host by its ID (for testing purposes)
-def contain_host_by_id_simulated(host_id):
-    pass
+# Mock function to simulate testing the connection to the CrowdStrike API
+def test_crowdstrike_connection(config):
+    if not config:
+        return
+
+    messagebox.showinfo("Success", "Successfully connected to the CrowdStrike API (simulated).")
 
 
-# Read the configuration .yaml file
-config_file_path = "config.yaml"
-try:
-    with open(config_file_path) as f:
-        config = yaml.safe_load(f)
-except FileNotFoundError:
-    print(f"Error: Could not find configuration file at path '{config_file_path}'")
-    exit()
-except Exception as e:
-    print(f"Error loading configuration file at path '{config_file_path}': {e}")
-    exit()
-else:
-    print(f"Configuration file loaded successfully from path '{config_file_path}'")
+# Mock function to simulate containing a host by its ID
+def contain_host_by_id(falcon_hosts, host_id):
+    # Simulated response
+    response = {
+        "status_code": 200 if host_id % 2 == 0 else 202,
+        "body": {"errors": [] if host_id % 2 == 0 else ["Some error"]}
+    }
+    return response
 
-# Retrieve the file path from the configuration file
-file_path = config.get("file_path")
-if not file_path:
-    exit("Exiting due to missing or empty file path in configuration file.")
 
-# Read hostnames from the file
-hostnames = read_hostnames(file_path)
-if not hostnames:
-    exit("Exiting due to missing or empty hostname file.")
+# Function to display results in the GUI
+def display_results(success, pending, failed):
+    results_window = tk.Toplevel(root)
+    results_window.title("Containment Results")
 
-# Simulated host ID generation and containment
-for hostname in hostnames:
-    # Simulate getting a host ID (normally from the API)
-    simulated_host_id = f"simulated_host_id_for_{hostname}"
-    # Simulate containing the host using its ID
-    contain_host_by_id_simulated(simulated_host_id)
-    print(f"Simulated containment response for {hostname} ({simulated_host_id})")
+    tk.Label(results_window, text="Successfully contained hosts:", fg="blue").pack()
+    for host in success:
+        tk.Label(results_window, text=f"- {host}", fg="blue").pack()
 
-status = input("Do you want to re-check the status of containment for these hosts? (Y/N) ")
-if status.lower() == 'n':
-    print("Exiting the script...")
-    exit()
-elif status.lower() == 'y':
-    print("Running ContainmentStatus.py and checking status of hosts.")
-    venv_python = sys.executable
-    containment_script = "ContainmentStatus.py"
-    subprocess.call([venv_python, containment_script])
-else:
-    print("Invalid input. Please enter Y or N.")
+    tk.Label(results_window, text="\nPending containment hosts:", fg="yellow").pack()
+    for host in pending:
+        tk.Label(results_window, text=f"- {host}", fg="yellow").pack()
+
+    tk.Label(results_window, text="\nFailed to contain hosts:", fg="red").pack()
+    for host in failed:
+        tk.Label(results_window, text=f"- {host}", fg="red").pack()
+
+    tk.Label(results_window, text="\n").pack()
+    tk.Button(results_window, text="Re-check Containment Status", command=run_containment_status).pack()
+    tk.Button(results_window, text="Exit", command=results_window.destroy).pack()
+
+
+# Mock function to simulate running ContainmentStatus.py
+def run_containment_status():
+    messagebox.showinfo("Info", "Running ContainmentStatus.py (simulated).")
+
+
+# Main function to start the containment process
+def start_containment():
+    config = load_config(CONFIG_FILE)
+    test_crowdstrike_connection(config)
+
+    successfully_contained_hosts = []
+    pending_contained_hosts = []
+    failed_to_contain_hosts = []
+
+    if config and 'file_path' in config:
+        hostnames = read_hostnames(config['file_path'])
+        if hostnames:
+            client_id = config['api']['client_id']
+            client_secret = config['api']['client_secret']
+
+            # Mock simulation of connecting to the API and processing hostnames
+            for i, hostname in enumerate(hostnames):
+                # Simulate host ID assignment
+                host_id = i + 1
+                containment_response = contain_host_by_id(None, host_id)
+                if containment_response:
+                    if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
+                        successfully_contained_hosts.append(hostname)
+                    elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
+                        pending_contained_hosts.append(hostname)
+                    else:
+                        failed_to_contain_hosts.append(hostname)
+                else:
+                    failed_to_contain_hosts.append(hostname)
+        else:
+            messagebox.showerror("Error", "No hostnames found in the specified file.")
+    else:
+        messagebox.showerror("Error", "File path for hostnames not specified in the configuration file.")
+
+    display_results(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
+
+
+# GUI setup
+root = tk.Tk()
+root.title("CrowdStrike Host Containment")
+
+frame = tk.Frame(root)
+frame.pack(pady=20)
+
+start_button = tk.Button(frame, text="Start Containment", command=start_containment)
+start_button.pack()
+
+root.mainloop()
+
