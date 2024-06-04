@@ -17,6 +17,7 @@ CONFIG_FILE = 'config.yaml'
 
 # Functions
 
+
 def load_config(file_path):
     if not os.path.isfile(file_path):
         messagebox.showerror("Error", f"Configuration file '{file_path}' not found.")
