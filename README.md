@@ -1,6 +1,4 @@
 # FalconContainment
-![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
-
 
 ## Overview
 This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
@@ -103,6 +101,9 @@ The scripts include basic error handling to manage issues such as:
 ![Screenshot of progress](https://i.imgur.com/aAZwz47.png)
 ![Screenshot of NoAPIsim.py](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
 ![Screenshot of Containment.py](https://i.imgur.com/vAXFnpb.png)
+
+## Tools used
+<img src="https://i.imgur.com/JIv8Tx9.png" width="90"> <img src="https://i.imgur.com/9DFxzIP.png" width="100"> <img src="https://i.imgur.com/8emdkiq.png" width="100"> <img src="https://i.imgur.com/Nj9B8hn.png" width="150"> <img src="https://i.imgur.com/qq8mtkB.png" width="200">
 
   ## References
 
