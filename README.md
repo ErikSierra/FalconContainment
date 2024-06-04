@@ -1,4 +1,6 @@
 # FalconContainment
+![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
+
 
 ## Overview
 This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
