@@ -1,144 +1,171 @@
 import os
 import yaml
+import json
+from colorama import init, Fore, Back, Style
 import sys
-import customtkinter as ctk
-from tkinter import messagebox
 
+init()
 # Constants
 CONFIG_FILE = 'config.yaml'
 
-# Functions
 
+# Function to load configuration
 def load_config(file_path):
     if not os.path.isfile(file_path):
-        messagebox.showerror("Error", f"Configuration file '{file_path}' not found.")
+        print(Fore.RED + f"Error: Configuration file '{file_path}' not found." + Style.RESET_ALL)
         sys.exit(1)
-
     try:
         with open(file_path, 'r') as f:
             config = yaml.safe_load(f)
             return config
     except yaml.YAMLError as e:
-        messagebox.showerror("Error", f"Error reading configuration file: {e}")
+        print(Fore.RED + f"Error reading configuration file: {e}" + Style.RESET_ALL)
         sys.exit(1)
 
+
+# Function to read hostnames from a text file
 def read_hostnames(file_path):
     if not os.path.isfile(file_path):
-        messagebox.showerror("Error", f"The file '{file_path}' was not found.")
+        print(Fore.RED + f"Error: The file '{file_path}' was not found." + Style.RESET_ALL)
         sys.exit(1)
     try:
         with open(file_path, 'r') as file:
             hostnames = [line.strip() for line in file.readlines()]
         return hostnames
     except Exception as e:
-        messagebox.showerror("Error", f"Error reading '{file_path}': {e}")
+        print(Fore.RED + f"Error reading '{file_path}': {e}" + Style.RESET_ALL)
         sys.exit(1)
 
-def test_crowdstrike_connection(config, status_label):
+
+# Test the connection to the CrowdStrike API
+def test_crowdstrike_connection(config):
     if not config:
         return
 
-    conn_success = True  # Simulate successful connection
-    if conn_success:
-        status_label.config(text="Connection Status: Successful!", fg='#48D1CC')
-        messagebox.showinfo("Success", "Successfully connected to the CrowdStrike API (simulated).")
-    else:
-        status_label.config(text="Connection Status: Failed!", fg='red')
-        messagebox.showerror("Error", "Failed to connect to the CrowdStrike API (simulated).")
-
-def contain_host_by_id(falcon_hosts, host_id):
-    response = {
-        "status_code": 200 if host_id % 2 == 0 else 202,
-        "body": {"errors": [] if host_id % 2 == 0 else ["Some error"]}
-    }
-    return response
-
-def display_results(success, pending, failed):
-    for widget in frame.winfo_children():
-        widget.destroy()
-    ctk.CTkLabel(frame, text="Containment Results", fg_color="#000000", text_color="#FFFFFF", font=('Helvetica', 20, 'bold')).pack(pady=5, side='top')
-
-    ctk.CTkLabel(frame, text="Successfully contained hosts:", fg_color="#000000", text_color="#008000", font=('Helvetica', 14, 'bold')).pack(pady=5)
-
-    for hostname in success:
-        ctk.CTkLabel(frame, text=hostname, fg_color="#000000", text_color="#FFFFFF", font=('Helvetica', 12)).pack(fill='both', padx=20, pady=5)
-
-    ctk.CTkLabel(frame, text="Pending containment hosts:", fg_color="#000000", text_color="#FFFF00", font=('Helvetica', 14, 'bold')).pack(pady=5)
-    for hostname in pending:
-        ctk.CTkLabel(frame, text=hostname, fg_color="#000000", text_color="#FFFFFF", font=('Helvetica', 12)).pack(fill='both', padx=20, pady=5)
-
-    ctk.CTkLabel(frame, text="Failed to contain hosts:", fg_color="#000000", text_color="#FF0000", font=('Helvetica', 14, 'bold')).pack(pady=5)
-    for hostname in failed:
-        ctk.CTkLabel(frame, text=hostname, fg_color="#000000", text_color="#FFFFFF", font=('Helvetica', 12)).pack(fill='both', padx=20, pady=5)
-
-    ctk.CTkButton(frame, text="Re-check Containment Status", command=run_containment_status, fg_color="#8FBC8F", text_color='white', font=('Helvetica', 12, 'bold')).pack(pady=10, padx=10)
-
-    ctk.CTkButton(frame, text="Exit", command=root.destroy, fg_color="#8FBC8F", text_color='white', font=('Helvetica', 12, 'bold')).pack(pady=10, padx=10)
-
-def run_containment_status():
-    messagebox.showinfo("Success", "Containment status updated successfully (simulated).")
-
-def start_containment():
-    config = load_config(CONFIG_FILE)
-
-    status_label = ctk.CTkLabel(frame, text="Connection Status: Not Tested", fg_color='#191970', text_color='white', font=('Helvetica', 18, 'bold'))
-    status_label.pack(pady=10)
-
-    if config:
+    try:
         client_id = config['api']['client_id']
         client_secret = config['api']['client_secret']
-        test_crowdstrike_connection(config, status_label)
+    except KeyError as e:
+        print(Fore.RED + f"Missing API credential in configuration file: {e}" + Style.RESET_ALL)
+        sys.exit(1)
 
-        successfully_contained_hosts = []
-        pending_contained_hosts = []
-        failed_to_contain_hosts = []
+    try:
+        # Simulate successful connection to CrowdStrike API
+        print("Successfully connected to the CrowdStrike API.")
+    except APIError as e:
+        print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
+        sys.exit(1)
+    except Exception as e:
+        print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
+        sys.exit(1)
 
-        if 'file_path' in config:
-            hostnames = read_hostnames(config['file_path'])
-            if hostnames:
-                for i, hostname in enumerate(hostnames):
-                    host_id = i + 1
-                    containment_response = contain_host_by_id(None, host_id)
-                    if containment_response:
-                        if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
-                            successfully_contained_hosts.append(hostname)
-                        elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
-                            pending_contained_hosts.append(hostname)
+
+# Load the configuration
+config = load_config(CONFIG_FILE)
+
+# Test the connection to the CrowdStrike API
+test_crowdstrike_connection(config)
+
+rerun_check = True
+while rerun_check:
+    # Initialize status lists
+    contained_hosts = []
+    pending_hosts = []
+    failed_hosts = []
+
+    # If the configuration is loaded and contains the file path, read the hostnames
+    if config and 'file_path' in config:
+        hostnames = read_hostnames(config['file_path'])
+        if hostnames:
+            print("==================================================================================================="
+                  "======================================")
+            print(Fore.BLUE + "Read hostnames:" + Style.RESET_ALL)
+            for hostname in hostnames:
+                print(hostname)
+            print("==================================================================================================="
+                  "======================================")
+
+            # Process each hostname
+            for hostname in hostnames:
+                try:
+                    # Simulate response from CrowdStrike API
+                    response = {
+                        "status_code": 200,
+                        "body": {
+                            "resources": ["1234567890"]
+                        }
+                    }
+                    # Check if the response contains host details
+                    if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
+                        host_id = response["body"]["resources"][0]  # Get the host ID from the response
+                        # Pretty print the host details
+                        # print(f"Host details for {hostname} ({host_id}): {json.dumps(response, indent=4)}")
+                        # Simulate successful containment status response from CrowdStrike API
+                        containment_status_response = {
+                            "status_code": 200,
+                            "body": {
+                                "resources": [
+                                    {
+                                        "id": "1234567890",
+                                        "status": "contained"
+                                    }
+                                ]
+                            }
+                        }
+                        # Debug: Print the full containment status response print(f"Containment status response for {
+                        # hostname} ({host_id}): {json.dumps(containment_status_response, indent=4)}") Check the
+                        # containment status response and update the status lists
+                        if containment_status_response and containment_status_response['status_code'] == 200 and containment_status_response['body']['resources']:
+                            containment_status = containment_status_response['body']['resources'][0].get('status', None)
+                            if containment_status == "contained":
+                                contained_hosts.append(hostname)
+                                # print(Fore.BLUE + f"{hostname}: Contained" + Style.RESET_ALL)
+                            elif containment_status == "containment_pending":
+                                pending_hosts.append(hostname)
+                                # print(Fore.YELLOW + f"{hostname}: Containment pending" + Style.RESET_ALL)
+                            else:
+                                failed_hosts.append(hostname)
+                                # print(Fore.RED + f"{hostname}: Not contained" + Style.RESET_ALL)
                         else:
-                            failed_to_contain_hosts.append(hostname)
+                            failed_hosts.append(hostname)
+                            print(Fore.RED + f"{hostname}: Error getting containment status" + Style.RESET_ALL)
                     else:
-                        failed_to_contain_hosts.append(hostname)
-            else:
-                messagebox.showerror("Error", "No hostnames found in the specified file.")
+                        print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
+                        failed_hosts.append(hostname)
+                except APIError as e:
+                    print(Fore.RED + f"APIError querying host {hostname}: {e.message}" + Style.RESET_ALL)
+                    failed_hosts.append(hostname)
+                except Exception as e:
+                    print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
+                    failed_hosts.append(hostname)
         else:
-            messagebox.showerror("Error", "File path for hostnames not specified in the configuration file.")
-
-        display_results(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
+            print(Fore.RED + "No hostnames found in the specified file." + Style.RESET_ALL)
     else:
-        messagebox.showerror("Error", f"Configuration file '{CONFIG_FILE}' not found.")
+        print(Fore.RED + "File path for hostnames not specified in the configuration file.")
 
-# GUI setup
-ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("dark-blue")
+    # Print summary
+    print("==========================================================================================================="
+          "==============================")
+    print(Fore.BLUE + "Contained hosts:")
+    for host in contained_hosts:
+        print(f"{host}")
 
-root = ctk.CTk()
-root.title("CrowdStrike Host Containment")
-root.geometry("800x600")
+    print(Fore.YELLOW + "\nPending containment hosts:")
+    for host in pending_hosts:
+        print(f"{host}")
 
-# Main frame with background color
-frame = ctk.CTkFrame(root)
-frame.pack(pady=20, padx=50, fill='both', expand=True)
-frame.place(relx=0.5, rely=0.5, anchor='center')
+    print(Fore.RED + "\nNon-contained hosts:")
+    for host in failed_hosts:
+        print(f"{host}")
 
-# Title label
-ctk.CTkLabel(frame, text="Welcome to the CrowdStrike Host Containment Tool", fg_color="#000000", text_color='#FFFFFF', font=('Helvetica', 20, 'bold')).pack(pady=10, padx=10, fill='both')
-
-# Start button
-start_button = ctk.CTkButton(frame, text="Start Containment", command=start_containment, fg_color='#8FBC8F', text_color='white', font=('Helvetica', 16, 'bold'), pady=20, padx=20)
-start_button.pack(pady=10, padx=10)
-
-# Exit button
-exit_button = ctk.CTkButton(frame, text="Exit", command=root.destroy, fg_color='#8FBC8F', text_color='white', font=('Helvetica', 16, 'bold'), pady=20, padx=20)
-exit_button.pack(pady=10, padx=10)
-
-root.mainloop()
+    # Ask user if they want to rerun the check again
+    user_input = input(Fore.BLUE + "\n============================================================================================"
+                       "=============================================\nDo you want to rerun the check again? (Y/N) ")
+    if user_input.lower() == "n":
+        rerun_check = False
+        print("Exiting the script...")
+    else:
+        print(Fore.BLUE + "============================================================================================"
+                          "============================================================================================"
+                          "==========\n"
+              "Rerunning the check...")
