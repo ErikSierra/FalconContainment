@@ -125,13 +125,13 @@ while rerun_check:
                             containment_status = containment_status_response['body']['resources'][0].get('status', None)
                             if containment_status == "contained":
                                 contained_hosts.append(hostname)
-                                print(Fore.BLUE + f"{hostname}: Contained" + Style.RESET_ALL)
+                                # print(Fore.BLUE + f"{hostname}: Contained" + Style.RESET_ALL)
                             elif containment_status == "containment_pending":
                                 pending_hosts.append(hostname)
-                                print(Fore.YELLOW + f"{hostname}: Containment pending" + Style.RESET_ALL)
+                                # print(Fore.YELLOW + f"{hostname}: Containment pending" + Style.RESET_ALL)
                             else:
                                 failed_hosts.append(hostname)
-                                print(Fore.RED + f"{hostname}: Not contained" + Style.RESET_ALL)
+                                # print(Fore.RED + f"{hostname}: Not contained" + Style.RESET_ALL)
                         else:
                             failed_hosts.append(hostname)
                             print(Fore.RED + f"{hostname}: Error getting containment status" + Style.RESET_ALL)
