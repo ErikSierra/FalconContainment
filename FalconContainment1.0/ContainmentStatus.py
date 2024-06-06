@@ -83,6 +83,7 @@ while rerun_check:
     contained_hosts = []
     pending_hosts = []
     failed_hosts = []
+    already_contained_hosts = []
 
     # If the configuration is loaded and contains the file path, read the hostnames
     if config and 'file_path' in config:
@@ -124,8 +125,10 @@ while rerun_check:
                         if containment_status_response and containment_status_response['status_code'] == 200 and containment_status_response['body']['resources']:
                             containment_status = containment_status_response['body']['resources'][0].get('status', None)
                             if containment_status == "contained":
-                                contained_hosts.append(hostname)
-                                # print(Fore.BLUE + f"{hostname}: Contained" + Style.RESET_ALL)
+                                if hostname not in already_contained_hosts:
+                                    contained_hosts.append(hostname)
+                                    already_contained_hosts.append(hostname)
+                                    # print(Fore.BLUE + f"{hostname}: Contained" + Style.RESET_ALL)
                             elif containment_status == "containment_pending":
                                 pending_hosts.append(hostname)
                                 # print(Fore.YELLOW + f"{hostname}: Containment pending" + Style.RESET_ALL)
