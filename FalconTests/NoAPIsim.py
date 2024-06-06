@@ -1,3 +1,11 @@
+"""
+Note:
+    This script is for testing purposes to attempt a mock simulation of 'Containment.py'
+This script does not perform any official API containment within Crowdstrike Falcon or related resources.
+Use 'Containment.py' for Crowdstrike API containment.
+Refer to the GitHub repository for instructions.
+"""
+
 import os
 import yaml
 import json
