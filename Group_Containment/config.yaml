@@ -1,4 +1,2 @@
-api:
-  client_id: <your client ID>
-  client_secret: <your client secret>
-file_path: computers.txt
+falcon_client_id: your_client_id
+falcon_client_secret: your_client_secret
