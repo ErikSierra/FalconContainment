@@ -8,7 +8,6 @@ from colorama import init, Fore, Back, Style
 import subprocess
 import sys
 
-from FalconTests.APIconnectionTest import falcon_hosts
 
 init()
 
@@ -85,24 +84,44 @@ def contain_host_by_id(falcon_hosts, host_id):
         return response
     except APIError as e:
         print(Fore.RED + f"APIError containing host ID {host_id}: {e.message}" + Style.RESET_ALL)
+        sys.exit(1)
     except Exception as e:
         print(Fore.RED + f"Error containing host ID {host_id}: {e}" + Style.RESET_ALL)
-        return None
+        sys.exit(1)
 
 
-'''    data={
-        "action": "contain",
-        "ids": [
-            host_group_id
-        ],
-        "parameters": {
-            "duration": containment_duration
-        }
-    }
-)'''
+# Load configuration file
+config = load_config(CONFIG_FILE)
 
-# Check for success/failure of containment request
-if response["status_code"] == 201:
-    print("Containment request successful.")
-else:
-    print(f"Containment request failed with error code - {response['status_code']}.")
+# Test connection to CrowdStrike API
+test_crowdstrike_connection(config)
+
+# Connect to the CrowdStrike Hosts API
+falcon_hosts = Hosts(access_token=config['api']['access_token'])
+
+# Initiate containment for all Hosts in the Host Group
+try:
+    # Query the Host Group to get a list of Host IDs
+    print("Querying the Host Group for Host IDs...")
+    query = falcon_hosts.query_devices(filter=f"falcon_host_group_id:'{host_group_id}'")
+    if query["status_code"] != 200:
+        print(Fore.RED + f"Error querying Hosts: {query['status_code']} {query['body']}" + Style.RESET_ALL)
+        sys.exit(1)
+    hosts = [device['id'] for device in query['body']['resources']]
+    print(Fore.BLUE + f"Found {len(hosts)} Hosts in the Host Group." + Style.RESET_ALL)
+
+    # Initiate containment for each Host
+    for host_id in hosts:
+        print(f"Initiating containment for Host ID: {host_id}")
+        response = contain_host_by_id(falcon_hosts, host_id)
+        if response["status_code"] == 200:
+            print(Fore.GREEN + f"Containment successfully initiated for Host ID: {host_id}" + Style.RESET_ALL)
+        else:
+            print(Fore.RED + f"Failed to initiate containment for Host ID: {host_id}. Status code: {response['status_code']}" + Style.RESET_ALL)
+
+except APIError as e:
+    print(Fore.RED + f"APIError when querying Host Group: {e.message}" + Style.RESET_ALL)
+    sys.exit(1)
+except Exception as e:
+    print(Fore.RED + f"Error when querying Host Group: {e}" + Style.RESET_ALL)
+    sys.exit(1)
