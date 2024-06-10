@@ -1,62 +1,97 @@
+import os
 import yaml
-import argparse
-from falconpy import Hosts
+import sys
+from falconpy import HostGroup, Hosts, APIHarness
 
-# Setup our argument parser
-parser = argparse.ArgumentParser("Script that leverages Falcon API to (un)contain hosts")
-parser.add_argument('-c', '--creds_file', dest='creds_file', help='Path to creds yaml file', required=True)
-parser.add_argument('-g', '--group_name', dest='group_name', help='Name of the group to quarantine', required=True)
-parser.add_argument('-l', '--lift', dest='lift_containment', action="store_true", help='Lift containment', default=False)
+# Constants
+CONFIG_FILE = 'config.yaml'
+GROUP_ID = 'your_group_id'  # Replace with your actual group ID
 
-# Parse our ingested arguments
-args = parser.parse_args()
+# Function to load configuration
+def load_config(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Error: Configuration file '{file_path}' not found.")
+        return None
 
-# Default action is to quarantine
-if args.lift_containment:
-    action = "lift_containment"
-else:
-    action = "contain"
+    try:
+        with open(file_path, 'r') as f:
+            config = yaml.safe_load(f)
+            return config
+    except yaml.YAMLError as e:
+        print(f"Error reading configuration file: {e}")
+        return None
 
-# Use the credentials file provided
-creds_file = args.creds_file
+# Load the configuration
+config = load_config(CONFIG_FILE)
+if not config:
+    sys.exit(1)
 
-# Load the contents of the creds file using the PyYAML parser library
-with open(creds_file, 'r') as file_creds:
-    creds = yaml.safe_load(file_creds)
+CLIENT_ID = config['api']['client_id']
+CLIENT_SECRET = config['api']['client_secret']
 
-# Create an instance of our OAuth2 authorization class using our ingested creds
-falcon = Hosts(client_id=creds["falcon_client_id"], client_secret=creds["falcon_client_secret"])
+# Initialize the API harness
+falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
-# Query the Hosts API for hosts that match our filter pattern
-response = falcon.query_devices_by_filter(filter=f"group_name:'{args.group_name}'", limit=10)
+# Function to list the members of a host group
+def list_host_group_members(group_id):
+    try:
+        # Create an instance of HostGroup
+        host_group = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+        
+        # Get the list of host IDs in the group
+        response = host_group.query_group_members(limit=5000, id=group_id)
+        if response['status_code'] != 200:
+            print(f"Error fetching group members: {response['errors']}")
+            return []
+        
+        # Extract host IDs
+        host_ids = response['body']['resources']
+        if not host_ids:
+            print("No hosts found in the group.")
+            return []
+        
+        return host_ids
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
 
-if response["status_code"] != 200:
-    raise SystemExit("Unable to retrieve list of devices that match the group name specified.")
+# Function to contain a host by its ID
+def contain_host_by_id(host_id):
+    try:
+        hosts = Hosts(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+        response = hosts.perform_action(action_name="contain", ids=[host_id])
+        if response['status_code'] == 200:
+            return True
+        else:
+            print(f"Failed to contain host {host_id}: {response['errors']}")
+            return False
+    except Exception as e:
+        print(f"An error occurred while containing host {host_id}: {e}")
+        return False
 
-# Retrieve the list of IDs returned
-contain_ids = response["body"]["resources"]
+# Function to process containment for each host in the group
+def contain_group_hosts(group_id):
+    host_ids = list_host_group_members(group_id)
+    if not host_ids:
+        return
 
-if not contain_ids:
-    # No hosts were found, exit out
-    raise SystemExit(f"[-] Could not find group name: {args.group_name} - Please verify proper case")
+    successfully_contained_hosts = []
+    failed_to_contain_hosts = []
 
-# Provide a status update to the terminal
-if action == "contain":
-    print(f"\n[+] Containing group: {args.group_name}\n")
-    blurb = "contained"
-else:
-    print(f"\n[+] Lifting Containment for group: {args.group_name}\n")
-    blurb = "released"
+    for host_id in host_ids:
+        if contain_host_by_id(host_id):
+            successfully_contained_hosts.append(host_id)
+        else:
+            failed_to_contain_hosts.append(host_id)
 
-# Perform the requested action
-response = falcon.perform_action(ids=contain_ids, action_name=action)
+    print("\nSuccessfully contained hosts:")
+    for host_id in successfully_contained_hosts:
+        print(f"- {host_id}")
 
-if response["status_code"] == 202:
-    for contained in response["body"]["resources"]:
-        print(f"{contained['id']} has been {blurb}.")
-else:
-    error_list = response["body"]["errors"]
-    for err in error_list:
-        ecode = err["code"]
-        emsg = err["message"]
-        print(f"[{ecode}] {emsg}")
+    print("\nFailed to contain hosts:")
+    for host_id in failed_to_contain_hosts:
+        print(f"- {host_id}")
+
+# Contain the members of the specified host group
+contain_group_hosts(GROUP_ID)
