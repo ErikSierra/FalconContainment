@@ -5,8 +5,7 @@ from falconpy import HostGroup, Hosts, APIHarness
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
-
+GROUP_ID = 'your_group_id'  # Replace with your actual group ID
 
 # Function to load configuration
 def load_config(file_path):
@@ -22,7 +21,6 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         return None
 
-
 # Load the configuration
 config = load_config(CONFIG_FILE)
 if not config:
@@ -33,7 +31,6 @@ CLIENT_SECRET = config['api']['client_secret']
 
 # Initialize the API harness
 falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-
 
 # Function to list the members of a host group
 def list_host_group_members(group_id):
@@ -59,7 +56,6 @@ def list_host_group_members(group_id):
         print(f"An error occurred: {e}")
         return []
 
-
 # Function to contain a host by its ID
 def contain_host_by_id(host_id):
     try:
@@ -68,12 +64,11 @@ def contain_host_by_id(host_id):
         if response['status_code'] == 200:
             return True
         else:
-            print(f"Failed to contain host {host_id}: {response['errors']}")
+            print(f"Failed to contain host {host_id}: {response}")
             return False
     except Exception as e:
         print(f"An error occurred while containing host {host_id}: {e}")
         return False
-
 
 # Function to process containment for each host in the group
 def contain_group_hosts(group_id):
@@ -97,7 +92,6 @@ def contain_group_hosts(group_id):
     print("\nFailed to contain hosts:")
     for host_id in failed_to_contain_hosts:
         print(f"- {host_id}")
-
 
 # Contain the members of the specified host group
 contain_group_hosts(GROUP_ID)
