@@ -1,7 +1,7 @@
 import os
 import yaml
 import sys
-from falconpy import HostGroup, Hosts, APIHarness
+from falconpy import HostGroup, Hosts
 
 # Constants
 CONFIG_FILE = 'config.yaml'
@@ -28,9 +28,6 @@ if not config:
 
 CLIENT_ID = config['api']['client_id']
 CLIENT_SECRET = config['api']['client_secret']
-
-# Initialize the API harness
-falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 # Function to list the members of a host group
 def list_host_group_members(group_id):
@@ -64,7 +61,9 @@ def contain_host_by_id(host_id):
         if response['status_code'] == 200:
             return True
         else:
-            print(f"Failed to contain host {host_id}: {response}")
+            # Print detailed error message
+            error_message = response.get('body', {}).get('errors', 'Unknown error')
+            print(f"Failed to contain host {host_id}: {error_message}")
             return False
     except Exception as e:
         print(f"An error occurred while containing host {host_id}: {e}")
