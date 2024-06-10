@@ -1,90 +1,70 @@
-
 import os
-import logging
-from argparse import ArgumentParser, RawTextHelpFormatter, Namespace
-from falconpy import APIHarnessV2, APIError
-from tabulate import tabulate
+import sys
+
+import yaml
+from falconpy import HostGroup, Hosts, APIHarness
+
+# Constants
+CONFIG_FILE = 'config.yaml'
+GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'
 
 
-def consume_arguments() -> Namespace:
-    """Consume any provided command line arguments."""
-    parser = ArgumentParser(description=__doc__, formatter_class=RawTextHelpFormatter)
-    parser.add_argument("-d", "--debug",
-                        help="Enable API debugging",
-                        action="store_true",
-                        default=False
-                        )
-    parser.add_argument("-m", "--mssp",
-                        help="List groups in all child CIDs (MSSP parents only)",
-                        action="store_true",
-                        default=False
-                        )
-    parser.add_argument("-c", "--child",
-                        help="List groups in a specific child CID (MSSP parents only)",
-                        default=None
-                        )
-    parser.add_argument("-t", "--table_format",
-                        help="Table format to use for tabular display",
-                        default="simple"
-                        )
-    req = parser.add_argument_group("Required arguments")
-    req.add_argument("-k", "--client_id",
-                     help="CrowdStrike Falcon API key",
-                     default=os.getenv("FALCON_CLIENT_ID")
-                     )
-    req.add_argument("-s", "--client_secret",
-                     help="CrowdStrike Falcon API secret",
-                     default=os.getenv("FALCON_CLIENT_SECRET")
-                     )
-    parsed = parser.parse_args()
-    if not parsed.client_id or not parsed.client_secret:
-        parser.error("You must provide CrowdStrike API credentials using the '-k' and '-s' arguments.")
+# Function to load configuration
+def load_config(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Error: Configuration file '{file_path}' not found.")
+        return None
 
-    return parsed
-
-
-cmd_line = consume_arguments()
-
-# Activate debugging if requested
-if cmd_line.debug:
-    logging.basicConfig(level=logging.DEBUG)
-
-# Create our base authentication dictionary (parent / child)
-auth = {
-    "client_id": cmd_line.client_id,
-    "client_secret": cmd_line.client_secret,
-    "debug": cmd_line.debug,
-    "pythonic": True
-}
-# If we are in MSSP mode, retrieve our child CID details
-if cmd_line.mssp:
-    parent = APIHarnessV2(**auth)
-    cids = parent.command("getChildren", ids=parent.command("queryChildren").data)
-elif cmd_line.child:
-    parent = APIHarnessV2(**auth)
     try:
-        cid_name = parent.command("getChildren", ids=cmd_line.child)
-    except APIError as api_error:
-        # Throw an error if they provided us an invalid CID
-        raise SystemExit(api_error.message)
-    cids = [{"name": cid_name[0]["name"]}]
-else:
-    # If not, we'll just run this in our current tenant
-    cids = [{"name": "CrowdStrike"}]
+        with open(file_path, 'r') as f:
+            config = yaml.safe_load(f)
+            return config
+    except yaml.YAMLError as e:
+        print(f"Error reading configuration file: {e}")
+        return None
 
-# Do the needful for each CID in the list
-for cid in cids:
-    print(f"\n{cid['name']} host groups")
-    if cmd_line.mssp:
-        # If we're a parent, add this child's CID to our authentication request
-        auth["member_cid"] = cid["child_cid"]
-    elif cmd_line.child:
-        auth["member_cid"] = cmd_line.child
-    # Demonstrating using the SDK interface as a context manager
-    # This will automatically discard the bearer token when exiting the context.
-    with APIHarnessV2(**auth) as sdk:
-        # Fields we want to display
-        keep = {"id": "ID", "name": "Name", "description": "Description"}
-        # Sometimes list comprehension is ridiculously cool...
-        results = [{k: v for k, v in d.items() if k in keep} for d in sdk.command("queryCombinedHostGroups")]
-        print(tabulate(tabular_data=results, headers=keep, tablefmt=cmd_line.table_format))
+
+# Load the configuration
+config = load_config(CONFIG_FILE)
+if not config:
+    sys.exit(1)
+
+CLIENT_ID = config['api']['client_id']
+CLIENT_SECRET = config['api']['client_secret']
+
+# Initialize the API harness
+falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+
+
+# Function to list the members of a host group
+def list_host_group_members(group_id):
+    try:
+        # Create an instance of HostGroup
+        host_group = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+
+        # Get the list of host IDs in the group
+        response = host_group.query_group_members(limit=5000, id=group_id)
+        if response['status_code'] != 200:
+            print(f"Error fetching group members: {response['errors']}")
+            return
+
+        # Extract host IDs
+        host_ids = response['body']['resources']
+        if not host_ids:
+            print("No hosts found in the group.")
+            return
+
+        # Fetch details for each host
+        hosts = Hosts(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+        host_details = hosts.get_device_details(ids=host_ids)
+
+        # Print the names of each host
+        for host in host_details['body']['resources']:
+            print(host.get('hostname', 'Unknown hostname'))
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+# List the members of the specified host group
+list_host_group_members(GROUP_ID)

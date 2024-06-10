@@ -6,7 +6,7 @@ from falconpy import HostGroup, Hosts, APIHarness
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'
+GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
 
 
 # Function to load configuration
