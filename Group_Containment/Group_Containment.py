@@ -38,7 +38,7 @@ def list_host_group_members(group_id):
         # Get the list of host IDs in the group
         response = host_group.query_group_members(limit=5000, id=group_id)
         if response['status_code'] != 200:
-            print(f"Error fetching group members: {response['errors']}")
+            print(f"Error fetching group members: {response.get('errors', 'Unknown error')}")
             return []
         
         # Extract host IDs
@@ -62,7 +62,7 @@ def contain_host_by_id(host_id):
             return True
         else:
             # Print detailed error message
-            error_message = response.get('body', {}).get('errors', 'Unknown error')
+            error_message = response.get('body', {}).get('errors', response)
             print(f"Failed to contain host {host_id}: {error_message}")
             return False
     except Exception as e:
