@@ -37,6 +37,7 @@ def list_host_group_members(group_id):
         
         # Get the list of host IDs in the group
         response = host_group.query_group_members(limit=5000, id=group_id)
+        print(f"Debug: Full response from query_group_members: {response}")
         if response['status_code'] != 200:
             print(f"Error fetching group members: {response.get('errors', 'Unknown error')}")
             return []
