@@ -5,7 +5,7 @@ from falconpy import HostGroup, Hosts
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-GROUP_ID = 'your_group_id'  # Replace with your actual group ID
+GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
 
 # Function to load configuration
 def load_config(file_path):
