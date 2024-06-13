@@ -1,6 +1,7 @@
 import yaml
 from falconpy import HostGroup, Hosts, APIHarness
 import os
+import sys
 
 # Constants
 CONFIG_FILE = 'config.yaml'
