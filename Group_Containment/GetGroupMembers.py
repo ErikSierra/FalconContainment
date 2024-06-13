@@ -3,7 +3,7 @@ from falconpy import HostGroup, Hosts, APIHarness
 # Constants
 CLIENT_ID = 'your_client_id'
 CLIENT_SECRET = 'your_client_secret'
-GROUP_ID = 'your_group_id'  # Replace with your actual group ID
+GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
 
 # Initialize the API harness
 falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
