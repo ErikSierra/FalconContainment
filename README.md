@@ -1,13 +1,23 @@
 # FalconContainment
+[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike)<br/>
 
-## Overview
-This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
+## Overview 🔎
+This project leverages the CrowdStrike Falcon API to automate the containment process for a specified list of hosts, with the aim of simplifying security operations.
 
-The code reads the list of hostnames from a configuration file, queries the API to obtain the host ID, and then contains the host using its ID. 
++ [Overview](#overview-)
++ [Prerequisites](#prerequisites-)
++ [Setup](#setup-)
++ [Testing](#testing-)
++ [Containment](#containment-)
++ [Lift Containment](#lift-containment-)
++ [Error Handling](#error-handling-)
++ [Notes](#notes-)
++ [Tools Used](#tools-used-)
++ [References](#references-)
 
-The project aims to simplify the security operations process by automating the containment process using the API.
 
-## Prerequisites
+
+## Prerequisites 🔎
 
 1. Before using these scripts, ensure you have:
 - Python 3.6 or higher installed.
@@ -22,7 +32,7 @@ The project aims to simplify the security operations process by automating the c
 - These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret.
 - Insert these credentials in the YAML file.
 
-## Setup
+## Setup 🔎
 **Virtual Environment**
 1. Clone this repository to your local machine/download ZIP
 2. (Optional but recommended) Create a virtual environment and activate it:
@@ -51,7 +61,7 @@ api:
 
 - (replace backets with your own Crowdstrike API credentials)
 
-## Testing (optional)
+## Testing 🔎
 To test functionality/readability of .txt file:
 1. Run the simulation test script:
 ```bash
@@ -66,21 +76,23 @@ To test connection to Crowdstrike API:
 python APIconnectionTest.py
 ```
 
-## Containment steps
+All other files located in 'FalconTests' are for development testing requiring hardcoded credentials to test specific parts of the overall process
+
+## Containment 🔎
 To contain the hostnames listed in the .txt file, run the containment script:
 
 ```bash
 python Containment.py
 ```
 
-## Uncontainment steps
+## Lift Containment 🔎
 To uncontain the hostnames listed in the .txt file, run the uncontainment script:
 
 ```bash
 python Lift_containment.py
 ```
 
-## Error Handling
+## Error Handling 🔎
 The scripts include basic error handling to manage issues such as:
 - Checking if the configuration file exists and can be read.
 - Checking if the file containing the hostnames exists and can be read.
@@ -90,22 +102,17 @@ The scripts include basic error handling to manage issues such as:
 - Differentiating between different HTTP response codes and errors returned by the CrowdStrike API and categorizing them as either successful, pending, or failed to contain a host.
 - Printing informative error messages for easy debugging.
 
-## Notes
+## Notes 🔎
 - Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (.yaml).
 - Make sure you provide the correct file path for the (.txt) file containing the hostnames, as it is required for the program to process the hosts.
 - Review the configuration file to ensure that it contains the right information, including the client ID and client secret, which are required for authentication to the API.
 - Review the limitations of the API, which may affect the success rate of containing hosts.
 - Keep an eye on the overall status of containment, as well as the status of individual hosts, in your Crowdstrike tool and script's output. 
 
-## Screenshots
-![Screenshot of progress](https://i.imgur.com/aAZwz47.png)
-![Screenshot of NoAPIsim.py](https://i.imgur.com/m8bBV0m.png "NoAPIsim.py")
-![Screenshot of Containment.py](https://i.imgur.com/vAXFnpb.png)
-
-## Tools used
+## Tools Used 🔎
 <img src="https://i.imgur.com/JIv8Tx9.png" width="90"> <img src="https://i.imgur.com/9DFxzIP.png" width="100"> <img src="https://i.imgur.com/8emdkiq.png" width="100"> <img src="https://i.imgur.com/Nj9B8hn.png" width="150"> <img src="https://i.imgur.com/qq8mtkB.png" width="200">
 
-  ## References
+## References 🔎
 
 This project utilizes the [FalconPY](https://github.com/CrowdStrike/falconpy) library to interact with the CrowdStrike API. FalconPY is an open-source Python client for the CrowdStrike Falcon API, providing easy integration and interaction with CrowdStrike's suite of services.
 
