@@ -10,7 +10,9 @@ response = falcon.query_combined_group_members(
     sort="hostname"
 )
 
-# Extract the hostname from each member object
-hostnames = [member.get("hostname") for member in response.get("resources", [])]
-
-print("Hostnames:", hostnames)
+if response.get("status_code") != 200:
+    print(f"Error: {response.get('error_message')}")
+else:
+    # Extract the hostname from each member object
+    hostnames = [member.get("hostname") for member in response.get("resources", [])]
+    print("Hostnames:", hostnames)
