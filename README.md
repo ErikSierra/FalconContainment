@@ -1,5 +1,6 @@
 # FalconContainment
 [![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike)<br/>
+![last updated](https://img.shields.io/github/last-commit/ErikSierra/FalconContainment?label=last%20updated&token=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)
 
 
 ## Overview
