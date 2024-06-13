@@ -12,3 +12,4 @@ response = falcon.query_combined_group_members(id="ac71d7e8c876456eb10424ca96f20
                                                sort="hostname"
                                                )
 print(response)
+print("hello world")
