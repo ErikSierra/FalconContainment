@@ -1,4 +1,6 @@
 # FalconContainment
+[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike)<br/>
+
 
 ## Overview
 This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
