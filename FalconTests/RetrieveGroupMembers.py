@@ -1,16 +1,14 @@
-"""
-THIS SCRIPT IS USED FOR RETRIEVING MEMBERS OF A HOST GROUP
-"""
-
 import os
 import sys
 
 import yaml
 from falconpy import HostGroup, Hosts, APIHarness
 
+
 # Constants
 CONFIG_FILE = 'config.yaml'
 GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'
+OUTPUT_FILE = 'computers.txt'
 
 
 # Function to load configuration
@@ -40,7 +38,7 @@ CLIENT_SECRET = config['api']['client_secret']
 falcon = APIHarness(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 
-# Function to list the members of a host group
+# Function to list the members of a host group and write them to a file
 def list_host_group_members(group_id):
     try:
         # Create an instance of HostGroup
@@ -62,13 +60,19 @@ def list_host_group_members(group_id):
         hosts = Hosts(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
         host_details = hosts.get_device_details(ids=host_ids)
 
-        # Print the names of each host
-        for host in host_details['body']['resources']:
-            print(host.get('hostname', 'Unknown hostname'))
+        # Write the names of each host to a file
+        try:
+            with open(OUTPUT_FILE, 'w') as f:
+                for host in host_details['body']['resources']:
+                    hostname = host.get('hostname', 'Unknown hostname')
+                    f.write(hostname + '\n')
+            print(f"Hostnames written to file: {OUTPUT_FILE}")
+        except Exception as e:
+            print(f"Error writing hostnames to file: {e}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
 
-# List the members of the specified host group
+# List the members of the specified host group and write them to a file
 list_host_group_members(GROUP_ID)
