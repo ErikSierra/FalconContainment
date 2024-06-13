@@ -8,6 +8,6 @@ falcon = HostGroup(client_id=CLIENT_ID,
 response = falcon.query_combined_host_groups(filter="",  # Query to filter host groups
                                              offset=0,
                                              limit=5000,
-                                             sort="string"
+                                             sort="name"
                                              )
 print(response)
