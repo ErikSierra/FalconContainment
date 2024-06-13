@@ -1,22 +1,16 @@
-from falconpy import HostGroup
+from falconpy import Hosts
 
-# Do not hardcode API credentials!
-falcon = HostGroup(client_id=CLIENT_ID,
-                   client_secret=CLIENT_SECRET
-                   )
+# Enable pythonic responses when you construct an instance of the class
+hosts = Hosts(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, pythonic=True)
 
-# Store the response data in a variable
-response_data = falcon.query_combined_group_members(id="ac71d7e8c876456eb10424ca96f2049d",
-                                                     offset=0,
-                                                     limit=5000,
-                                                     sort="hostname"
-                                                     )
+# Define the group name to filter by
+group_name = 'Workflow Testing'
 
-# Loop through the response data and print the details for each host
-for host in response_data["resources"]:
-    print("HOST DETAILS:")
-    print(f"Hostname: {host.get('hostname')}")
-    print(f"IP Address: {host.get('local_ip')}")
-    print(f"OS: {host.get('os_version')}")
-    print(f"Last Seen: {host.get('last_seen')}")
-    print(f"\n")  # Add a blank line between each host's details
+# Construct the filter
+filter = f"falcon_sandbox_id:{hosts.creds.sandbox_id} AND group_name:'{group_name}'"
+
+# Query devices by the filter and loop through the results
+result = hosts.query_devices_by_filter_scroll(filter=filter)
+if not result.raw:
+    for device_id in result:
+        print(device_id)
