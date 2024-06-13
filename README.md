@@ -1,14 +1,15 @@
 # FalconContainment
 [![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike)<br/>
 
-## Overview
-This project automates the containment process for a list of hosts by leveraging the CrowdStrike Falcon API. 
+## Overview 🔎
+This project leverages the CrowdStrike Falcon API to automate the containment process for a specified list of hosts, with the aim of simplifying security operations.
 
-The code reads the list of hostnames from a configuration file, queries the API to obtain the host ID, and then contains the host using its ID. 
++ [Overview](#overview-)
++ [Prerequisites](#prerequisites-)
++ [Setup](#setup-)
++ [Contribute to FalconPy](#contribute-to-falconpy-)
 
-The project aims to simplify the security operations process by automating the containment process using the API.
-
-## Prerequisites
+## Prerequisites 🔎
 
 1. Before using these scripts, ensure you have:
 - Python 3.6 or higher installed.
@@ -23,7 +24,7 @@ The project aims to simplify the security operations process by automating the c
 - These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret.
 - Insert these credentials in the YAML file.
 
-## Setup
+## Setup 🔎
 **Virtual Environment**
 1. Clone this repository to your local machine/download ZIP
 2. (Optional but recommended) Create a virtual environment and activate it:
