@@ -1,1 +1,3 @@
-Dummy data
+PS C:\Users\fs123440\OneDrive - First Solar\Projects\FalconContainment\Group_Containment> python .\GetGroupMembers.py
+Error fetching group members: Unknown error
+PS C:\Users\fs123440\OneDrive - First Solar\Projects\FalconContainment\Group_Containment>
