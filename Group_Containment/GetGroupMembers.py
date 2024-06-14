@@ -36,6 +36,9 @@ falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 def list_host_group_members(group_id):
     try:
         response = falcon.query_combined_group_members(id=group_id, limit=5000)
+        # Debugging: Print the full response to understand its structure
+        print(f"Debug: Full response from query_combined_group_members: {response}")
+        
         if response['status_code'] != 200:
             print(f"Error fetching group members: {response.get('errors', 'Unknown error')}")
             return
