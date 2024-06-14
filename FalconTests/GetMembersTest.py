@@ -1,15 +1,18 @@
-
-
 from falconpy.hosts import Hosts
+from falconpy import HostGroup
 
-# Replace GROUP_ID with the ID of the group you want to query
-GROUP_ID = "my-group-id"
 
-# Create a Hosts instance and authenticate
-falcon = Hosts(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+group_id = "<group_id>"  # Replace <group_id> with the actual group ID you want to filter by
+filter_string = f"group_id:'{group_id}'"
 
-# Query devices by group ID
-devices = falcon.query_devices_by_filter(filter=f"group_id:'{GROUP_ID}'", sort="hostname.asc")
+returned = falcon.query_devices_by_filter(
+                    sort="hostname.asc"
+                    )
 
-# Print the results
-print(devices)
+print(returned)
+
+
+
+group_id = "<group_id>"  # Replace <group_id> with the actual group ID you want to filter by
+filter_string = f"group_id:'{group_id}'"
+results = falcon.query_devices_by_filter(filter=filter_string)
