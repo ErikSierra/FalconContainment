@@ -4,7 +4,6 @@ import json
 import sys
 from falconpy import Hosts, HostGroup, APIError
 from colorama import init, Fore, Style
-import subprocess
 
 init()
 
@@ -197,14 +196,18 @@ def main():
     # Contain hosts
     contain_hosts(members, client_id, client_secret)
 
-    # Option to check containment status or lift containment
-    action = input("Do you want to check containment status or lift containment? (status/lift/none): ").lower()
-    if action == "status":
-        containment_status(members, client_id, client_secret)
-    elif action == "lift":
-        lift_containment(members, client_id, client_secret)
-    else:
-        print("No further action taken.")
+    while True:
+        # Option to check containment status or lift containment
+        action = input("Do you want to check containment status or lift containment? (status/lift/none): ").lower()
+        if action == "status":
+            containment_status(members, client_id, client_secret)
+        elif action == "lift":
+            lift_containment(members, client_id, client_secret)
+        elif action == "none":
+            print("No further action taken.")
+            break
+        else:
+            print("Invalid input. Please enter 'status', 'lift', or 'none'.")
 
 if __name__ == "__main__":
     main()
