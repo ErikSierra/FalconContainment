@@ -70,7 +70,7 @@ def uncontain_host_by_id(falcon_hosts, host_id):
 # Function to get host groups
 def get_host_groups(client_id, client_secret):
     falcon = HostGroup(client_id=client_id, client_secret=client_secret)
-    response = falcon.query_host_groups()
+    response = falcon.query_combined_host_groups()
     if response["status_code"] == 200:
         groups = response["body"]["resources"]
         for group in groups:
