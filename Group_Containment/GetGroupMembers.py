@@ -5,7 +5,7 @@ from falconpy import HostGroup
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
+GROUP_ID = 'your_group_id'  # Replace with your actual group ID
 
 # Function to load configuration
 def load_config(file_path):
@@ -32,7 +32,7 @@ CLIENT_SECRET = config['api']['client_secret']
 # Initialize the API harness
 falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
-# Function to list and print the names of the members of a host group
+# Function to list and print the IDs and names of the members of a host group
 def list_host_group_members(group_id):
     try:
         response = falcon.query_combined_group_members(id=group_id, limit=5000)
@@ -40,14 +40,16 @@ def list_host_group_members(group_id):
             print(f"Error fetching group members: {response.get('errors', 'Unknown error')}")
             return
         
-        # Extract and print host names
+        # Extract and print host IDs and names
         members = response['body']['resources']
         if not members:
             print("No hosts found in the group.")
             return
         
         for member in members:
-            print(member.get('hostname', 'Unknown hostname'))
+            host_id = member.get('device_id', 'Unknown ID')
+            hostname = member.get('hostname', 'Unknown hostname')
+            print(f"Host ID: {host_id}, Hostname: {hostname}")
     
     except Exception as e:
         print(f"An error occurred: {e}")
