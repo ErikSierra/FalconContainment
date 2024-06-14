@@ -23,10 +23,6 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         sys.exit(1)
 
-# Function to simulate reading hostnames from a text file
-def read_hostnames(file_path):
-    return ["host1", "host2", "host3"]
-
 # Function to simulate testing the connection to the CrowdStrike API
 def test_crowdstrike_connection(client_id, client_secret):
     print(Fore.BLUE + "Successfully connected to the CrowdStrike API (simulated)." + Style.RESET_ALL)
