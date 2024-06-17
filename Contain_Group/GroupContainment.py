@@ -8,7 +8,7 @@ from colorama import init, Fore, Style
 init()
 
 # Constants
-CONFIG_FILE = 'config.yaml'
+CONFIG_FILE = '../FalconTests/config.yaml'
 
 # Function to load configuration
 def load_config(file_path):
