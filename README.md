@@ -65,8 +65,7 @@ The scripts include basic error handling to manage issues such as:
 
   
 ## Tools Used 🔎
-<img src="https://i.imgur.com/JIv8Tx9.png" width="90"> <img src="https://i.imgur.com/9DFxzIP.png" width="100"> <img src="https://i.imgur.com/8emdkiq.png" width="100"> <img src="https://i.imgur.com/Nj9B8hn.png" width="150"> <img src="https://i.imgur.com/qq8mtkB.png" width="200">
-
+<img src="https://i.imgur.com/JIv8Tx9.png" width="90"> <img src="https://i.imgur.com/KW5abKF.jpeg" width="150"> <img src="https://i.imgur.com/9DFxzIP.png" width="100"> <img src="https://i.imgur.com/8emdkiq.png" width="100"> <img src="https://i.imgur.com/Nj9B8hn.png" width="150"> <img src="https://i.imgur.com/qq8mtkB.png" width="200">  
 ## References 🔎
 
 This project utilizes the [FalconPY](https://github.com/CrowdStrike/falconpy) library to interact with the CrowdStrike API. FalconPY is an open-source Python client for the CrowdStrike Falcon API, providing easy integration and interaction with CrowdStrike's suite of services.
