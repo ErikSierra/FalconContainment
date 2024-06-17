@@ -8,9 +8,6 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 + [Overview](#overview-)
 + [Prerequisites](#prerequisites-)
 + [Setup](#setup-)
-+ [Testing](#testing-)
-+ [Containment](#containment-)
-+ [Lift Containment](#lift-containment-)
 + [Error Handling](#error-handling-)
 + [Notes](#notes-)
 + [Tools Used](#tools-used-)
@@ -41,57 +38,6 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
    python -m venv venv
    source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
 
-**Create .txt file**
-1. Create a file named computers.txt in the same directory as your script. List each hostname on a new line that you'd like Crowdstrike to contain:
-```bash
-computer1
-computer2
-computer3
-```
-
- - (When these hostnames are read by the script, extra spaces/newlines will automatically be removed): 
-
-**Create .yaml file**
-
-2. Create a file named config.yaml in the same directory as your scrip with the following information
-```bash
-api:
-  client_id: <your client ID>
-  client_secret: <your client secret>
-```
-
-- (replace backets with your own Crowdstrike API credentials)
-
-## Testing 🔎
-To test functionality/readability of .txt file:
-1. Run the simulation test script:
-```bash
-python NoAPIsim.py
-```
-
-To test connection to Crowdstrike API:
-
-2. Run the connection test script:
-
-```bash
-python APIconnectionTest.py
-```
-
-All other files located in 'FalconTests' are for development testing requiring hardcoded credentials to test specific parts of the overall process
-
-## Containment 🔎
-To contain the hostnames listed in the .txt file, run the containment script:
-
-```bash
-python Containment.py
-```
-
-## Lift Containment 🔎
-To uncontain the hostnames listed in the .txt file, run the uncontainment script:
-
-```bash
-python Lift_containment.py
-```
 
 ## Error Handling 🔎
 The scripts include basic error handling to manage issues such as:
@@ -120,5 +66,7 @@ This project utilizes the [FalconPY](https://github.com/CrowdStrike/falconpy) li
 For more information, documentation, and examples:
 
 Visit the FalconPY GitHub repository: [FalconPY on GitHub](https://github.com/CrowdStrike/falconpy).
+
+Visit the Crowdstrike Reddit: [Crowdstrike on Reddit](https://www.reddit.com/r/crowdstrike/)
 
 Visit the FalconPY Wiki for Python: [CrowdstrikeFalconWiki](https://www.falconpy.io/Home.html).
