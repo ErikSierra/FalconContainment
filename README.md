@@ -1,6 +1,6 @@
 # FalconContainment
-[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike)<br/>
-![GitHub releases](https://img.shields.io/github/v/release/ErikSierra/FalconContainment?label=Releases)
+[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike) ![GitHub releases](https://img.shields.io/github/v/release/ErikSierra/FalconContainment?label=Releases) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/ErikSierra/FalconContainment/latest?label=Commits%20since%20latest%20release)
+
 
 ## Overview 🔎
 This project leverages the CrowdStrike Falcon API to automate the containment process for a specified list of hosts, with the aim of simplifying security operations.
