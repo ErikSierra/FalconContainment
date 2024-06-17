@@ -27,8 +27,12 @@ This script is used to test retrieval of members of a group in your crowdstrike 
 #### Usage
 
 1. Use the config.yaml file and insert your API credentials and the file path to the computers.txt file. The file should be structured as follows:
-api: client_id: YOUR_CLIENT_ID client_secret: YOUR_CLIENT_SECRET file_path: computers.txt
-
+```
+api:
+  client_id: YOUR_CLIENT_ID
+  client_secret: YOUR_CLIENT_SECRET
+file_path: computers.txt
+```
 2. Insert your group ID from crowdstrike into the "GROUP_ID" field in the script
 
 3. Run the script by navigating to the directory where the file is located and running the following prompt in your terminal
