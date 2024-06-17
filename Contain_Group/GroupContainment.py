@@ -10,6 +10,7 @@ init()
 # Constants
 CONFIG_FILE = '../FalconTests/config.yaml'
 
+
 # Function to load configuration
 def load_config(file_path):
     if not os.path.isfile(file_path):
@@ -36,7 +37,8 @@ def test_crowdstrike_connection(client_id, client_secret):
             print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
             sys.exit(1)
         else:
-            print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" + Style.RESET_ALL)
+            print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" +
+                  Style.RESET_ALL)
             sys.exit(1)
     except APIError as e:
         print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
