@@ -9,6 +9,7 @@ init()
 # Constants
 CONFIG_FILE = 'config.yaml'
 
+
 # Function to load configuration
 def load_config(file_path):
     if not os.path.isfile(file_path):
@@ -23,9 +24,11 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         sys.exit(1)
 
+
 # Function to simulate testing the connection to the CrowdStrike API
 def test_crowdstrike_connection(client_id, client_secret):
     print(Fore.BLUE + "Successfully connected to the CrowdStrike API (simulated)." + Style.RESET_ALL)
+
 
 # Function to simulate containing a host by its ID
 def contain_host_by_id(falcon_hosts, host_id):
@@ -36,6 +39,7 @@ def contain_host_by_id(falcon_hosts, host_id):
     else:
         return {"status_code": 400, "body": {"errors": ["Simulated error"]}}
 
+
 # Function to simulate un-containing a host by its ID
 def uncontain_host_by_id(falcon_hosts, host_id):
     if host_id == "host1":
@@ -44,6 +48,7 @@ def uncontain_host_by_id(falcon_hosts, host_id):
         return {"status_code": 202, "body": {"errors": []}}
     else:
         return {"status_code": 400, "body": {"errors": ["Simulated error"]}}
+
 
 # Function to simulate getting host groups
 def get_host_groups(client_id, client_secret):
@@ -55,6 +60,7 @@ def get_host_groups(client_id, client_secret):
         print(f"ID: {group['id']}, Name: {group['name']}")
     return groups
 
+
 # Function to simulate getting group members
 def get_group_members(client_id, client_secret, group_id):
     members = [
@@ -65,6 +71,7 @@ def get_group_members(client_id, client_secret, group_id):
     for member in members:
         print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
     return [member['device_id'] for member in members]
+
 
 # Function to simulate containing hosts
 def contain_hosts(hosts, client_id, client_secret):
@@ -89,6 +96,7 @@ def contain_hosts(hosts, client_id, client_secret):
     
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
 
+
 # Function to simulate lifting containment for hosts
 def lift_containment(hosts, client_id, client_secret):
     successfully_uncontained_hosts = []
@@ -112,6 +120,7 @@ def lift_containment(hosts, client_id, client_secret):
     
     print_summary(successfully_uncontained_hosts, pending_uncontained_hosts, failed_to_uncontain_hosts)
 
+
 # Function to simulate printing summary
 def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts):
     print("\n============================================================================================================")
@@ -127,6 +136,7 @@ def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_
     for host in failed_to_contain_hosts:
         print(Fore.RED + f"- {host}" + Style.RESET_ALL)
 
+
 # Function to simulate checking containment status
 def containment_status(hosts, client_id, client_secret):
     for host in hosts:
@@ -137,6 +147,7 @@ def containment_status(hosts, client_id, client_secret):
         else:
             state = "failed"
         print(f"Hostname: {host}, ID: {host} ==> Status: {state}")
+
 
 def main():
     # Load the configuration
@@ -175,6 +186,7 @@ def main():
         lift_containment(members, client_id, client_secret)
     else:
         print("No further action taken.")
+
 
 if __name__ == "__main__":
     main()

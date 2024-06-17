@@ -5,7 +5,8 @@ from falconpy import HostGroup
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-GROUP_ID = 'ac71d7e8c876456eb10424ca96f2049d'  # Replace with your actual group ID
+GROUP_ID = '123456789'  # Replace with your actual group ID
+
 
 # Function to load configuration
 def load_config(file_path):
@@ -21,6 +22,7 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         return None
 
+
 # Load the configuration
 config = load_config(CONFIG_FILE)
 if not config:
@@ -31,6 +33,7 @@ CLIENT_SECRET = config['api']['client_secret']
 
 # Initialize the API harness
 falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+
 
 # Function to list and print the names and IDs of the members of a host group
 def list_host_group_members(group_id):
@@ -58,5 +61,7 @@ def list_host_group_members(group_id):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
 # List the members of the specified host group
 list_host_group_members(GROUP_ID)
+

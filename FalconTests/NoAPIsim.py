@@ -11,6 +11,7 @@ import yaml
 import json
 from colorama import init, Fore, Back, Style
 import sys
+from falconpy import APIError
 
 init()
 # Constants

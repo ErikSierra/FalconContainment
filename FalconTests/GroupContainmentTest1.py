@@ -24,6 +24,7 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         sys.exit(1)
 
+
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(client_id, client_secret):
     try:
@@ -44,6 +45,7 @@ def test_crowdstrike_connection(client_id, client_secret):
         print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
         sys.exit(1)
 
+
 # Function to contain a host by its ID
 def contain_host_by_id(falcon_hosts, host_id):
     try:
@@ -55,6 +57,7 @@ def contain_host_by_id(falcon_hosts, host_id):
         print(Fore.RED + f"Error containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
 
+
 # Function to un-contain a host by its ID
 def uncontain_host_by_id(falcon_hosts, host_id):
     try:
@@ -65,6 +68,7 @@ def uncontain_host_by_id(falcon_hosts, host_id):
     except Exception as e:
         print(Fore.RED + f"Error un-containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
+
 
 # Function to get host groups
 def get_host_groups(client_id, client_secret):
@@ -79,6 +83,7 @@ def get_host_groups(client_id, client_secret):
         print(f"Error: {response['body']['errors'][0]['message']}")
         return []
 
+
 # Function to get group members
 def get_group_members(client_id, client_secret, group_id):
     falcon = HostGroup(client_id=client_id, client_secret=client_secret)
@@ -91,6 +96,7 @@ def get_group_members(client_id, client_secret, group_id):
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
         return []
+
 
 # Function to contain hosts
 def contain_hosts(hosts, client_id, client_secret):
@@ -116,6 +122,7 @@ def contain_hosts(hosts, client_id, client_secret):
     
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
 
+
 # Function to lift containment for hosts
 def lift_containment(hosts, client_id, client_secret):
     falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
@@ -140,6 +147,7 @@ def lift_containment(hosts, client_id, client_secret):
     
     print_summary(successfully_uncontained_hosts, pending_uncontained_hosts, failed_to_uncontain_hosts)
 
+
 # Function to print summary
 def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts):
     print("\n============================================================================================================")
@@ -155,6 +163,7 @@ def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_
     for host in failed_to_contain_hosts:
         print(Fore.RED + f"- {host}" + Style.RESET_ALL)
 
+
 # Function to check containment status
 def containment_status(hosts, client_id, client_secret):
     falcon = Hosts(client_id=client_id, client_secret=client_secret)
@@ -166,6 +175,7 @@ def containment_status(hosts, client_id, client_secret):
             print(f"Hostname: {hostname}, ID: {host} ==> Status: {state}")
         else:
             print(result["body"]["errors"])
+
 
 def main():
     # Load the configuration
@@ -208,6 +218,7 @@ def main():
             break
         else:
             print("Invalid input. Please enter 'status', 'lift', or 'none'.")
+
 
 if __name__ == "__main__":
     main()
