@@ -1,5 +1,6 @@
 # FalconContainment
-[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike) ![GitHub releases](https://img.shields.io/github/v/release/ErikSierra/FalconContainment?label=Releases) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/ErikSierra/FalconContainment/latest?label=Commits%20since%20latest%20release) [![Repo Status](https://img.shields.io/badge/repo-active-yellow)](https://github.com/ErikSierra/FalconContainment)
+[![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike) ![GitHub releases](https://img.shields.io/github/v/release/ErikSierra/FalconContainment?label=Releases) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/ErikSierra/FalconContainment/latest?label=Commits%20since%20latest%20release) [![Repo Status](https://img.shields.io/badge/repo-active-yellow)](https://github.com/ErikSierra/FalconContainment) ![GitHub top language](https://img.shields.io/github/languages/top/ErikSierra/FalconContainment?logo=python&logoColor=white)
+
 
 
 ## Overview 🔎
