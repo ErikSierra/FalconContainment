@@ -13,12 +13,12 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 + [References](#references-)
 
 ## Navigation 🔎
-- FalconTests
+- **FalconTests**
      - Scripts used for testing/simulating processes of the project
-- Contain_Host
+- **Contain_Host**
      - Scripts used to contain, check containment status, or lift containment on individual hosts
-- Contain_Group
-      - Scripts used to contain or lift containment on multiple hosts in a group
+- **Contain_Group**
+     - Scripts used to contain or lift containment on multiple hosts in a group
 
 ## Flowchart
 ![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/f0150eb4-c9e0-42bf-9456-30a8c9dc297c)
