@@ -1,4 +1,4 @@
-![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/1db97bab-9b7b-4101-bf45-306e7e9d1e7f)# FalconContainment
+# FalconContainment
 [![CrowdStrike Subreddit](https://img.shields.io/badge/-r%2Fcrowdstrike-white?logo=reddit&labelColor=gray&link=https%3A%2F%2Freddit.com%2Fr%2Fcrowdstrike)](https://reddit.com/r/crowdstrike) ![GitHub releases](https://img.shields.io/github/v/release/ErikSierra/FalconContainment?label=Releases) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/ErikSierra/FalconContainment/latest?label=Commits%20since%20latest%20release)
 
 
@@ -6,13 +6,20 @@
 This project leverages the CrowdStrike Falcon API to automate the containment process for a specified list of hosts, with the aim of simplifying security operations.
 
 + [Overview](#overview-)
++ [Navigation](#navigation-)
 + [Prerequisites](#prerequisites-)
-+ [Setup](#setup-)
-+ [Error Handling](#error-handling-)
 + [Notes](#notes-)
-+ [Tools Used](#tools-used-)
 + [References](#references-)
 
+## Navigation 🔎
+- FalconTests
+     - Scripts used for testing/simulating processes of the project
+- Contain_Host
+     - Scripts used to contain, check containment status, or lift containment on individual hosts
+- Contain_Group
+      - Scripts used to contain or lift containment on multiple hosts in a group
+
+## Flowchart
 ![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/f0150eb4-c9e0-42bf-9456-30a8c9dc297c)
 
 
@@ -31,23 +38,18 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 - These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret.
 - Insert these credentials in the YAML file.
 
-## Setup 🔎
-**Virtual Environment**
-1. Clone this repository to your local machine/download ZIP
-2. (Optional but recommended) Create a virtual environment and activate it:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
+
 
 ## Notes 🔎
+
+#### Consider:
 - Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (.yaml).
 - Make sure you provide the correct file path for the (.txt) file containing the hostnames, as it is required for the program to process the hosts.
 - Review the configuration file to ensure that it contains the right information, including the client ID and client secret, which are required for authentication to the API.
 - Review the limitations of the API, which may affect the success rate of containing hosts.
 - Keep an eye on the overall status of containment, as well as the status of individual hosts, in your Crowdstrike tool and script's output.
-
   
-## Error Handling 🔎
+#### Error Handling
 The scripts include basic error handling to manage issues such as:
 - Checking if the configuration file exists and can be read.
 - Checking if the file containing the hostnames exists and can be read.
@@ -56,6 +58,10 @@ The scripts include basic error handling to manage issues such as:
 - Handling of API errors and exceptions that may occur during the connection and containment process.
 - Differentiating between different HTTP response codes and errors returned by the CrowdStrike API and categorizing them as either successful, pending, or failed to contain a host.
 - Printing informative error messages for easy debugging.
+
+  
+
+  
 ## Tools Used 🔎
 <img src="https://i.imgur.com/JIv8Tx9.png" width="90"> <img src="https://i.imgur.com/9DFxzIP.png" width="100"> <img src="https://i.imgur.com/8emdkiq.png" width="100"> <img src="https://i.imgur.com/Nj9B8hn.png" width="150"> <img src="https://i.imgur.com/qq8mtkB.png" width="200">
 
