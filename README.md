@@ -46,9 +46,9 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 
 ## Notes 🔎
 
-#### Consider:
+#### Consider (where necessary):
 - Make sure you have a valid credentials for the CrowdStrike API, as you will need to provide them in the configuration file (.yaml).
-- Make sure you provide the correct file path for the (.txt) file containing the hostnames, as it is required for the program to process the hosts.
+- Make sure you provide the correct file path for the (computers.txt) file containing the hostnames, as it is required for the program to process the hosts.
 - Review the configuration file to ensure that it contains the right information, including the client ID and client secret, which are required for authentication to the API.
 - Review the limitations of the API, which may affect the success rate of containing hosts.
 - Keep an eye on the overall status of containment, as well as the status of individual hosts, in your Crowdstrike tool and script's output.
