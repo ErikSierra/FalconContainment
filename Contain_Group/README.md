@@ -16,6 +16,9 @@ python3 Get_Host_Group.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET
 ```
 python3 Get_Host_Group.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET > FileName.txt
 ```
+#### Example result (method 2)
+![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/b479843b-43bd-453b-9406-3b9a1a6137c5)
+
 
 ## GetGroupMembers.py
 
@@ -36,12 +39,15 @@ Use this file to retrieve information on members in your provided group in your 
   python GetGroupMembers.py > FileName.txt
   ```
 
+#### Example result (method 2)
+![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/a85084a7-d74c-4e4b-8de1-646d5b4b72c2)
+
 ## GroupContainment.py
 
 Use this file to contain a group of hosts in your Crowdstrike environment
 ### Usage
 
-1. Insert your Crowdstrike API credentials into the config.yaml file in this format:\
+1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml) file in this format:
  ```
 api:
   client_id: YOUR_CLIENT_ID_HERE
@@ -52,5 +58,7 @@ api:
 ```
 python GroupContainment.py
 ```
+#### Example result 
+![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/a82ca025-7502-476c-bd68-c2da35cde17a)
 
 
