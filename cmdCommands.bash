@@ -9,17 +9,35 @@ source venv/bin/activate
 # On Windows:
 # venv\Scripts\activate
 
-# Install required Python packages
 pip install -r requirements.txt
 
-# Run the connection test script
 python APIconnectionTest.py
 
-# Run the containment test simulation (without API)
+python GetMembersTest.py
+
+python GroupContainSim.py
+
+python GUI test.py
+
 python NoAPIsim.py
 
-# Run the actual crowdstrike containment script
+python Containment.py
+
 python ContainmentStatus.py
 
-# Run the status update for contained hosts
-python ContainmentStatus.py
+python Lift_containment.py
+
+python GetGroupMembers.py
+
+python3 GetHostGroup.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET
+
+python GroupContainment
+
+pip install -r requirements.txt
+
+
+
+
+
+
+
