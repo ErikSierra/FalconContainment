@@ -53,7 +53,7 @@ Use this file to lift containment on one or more hosts in your Crowdstrike envir
   api:
     client_id: <your client ID>
     client_secret: <your client secret>
-2. List the names of your hosts from your crowdstrike environment in the [computers.txtl](./computers.txt) in this format:
+2. List the names of your hosts from your crowdstrike environment in the [computers.txt](./computers.txt) in this format:
   Computer 1
   Computer 2
   Computer 3
