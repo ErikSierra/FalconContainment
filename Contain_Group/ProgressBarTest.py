@@ -111,14 +111,21 @@ def contain_hosts(hosts, client_id, client_secret):
     failed_to_contain_hosts = []
 
     # Create a tqdm progress bar
-    progress_bar = tqdm(total=len(hosts), desc="Containing Hosts")
+    progress_bar = tqdm(total=len(hosts), desc="Containing Hosts", position=0)
 
     for host_id in hosts:
         containment_response = contain_host_by_id(falcon_hosts, host_id)
+        num_contained = len(successfully_contained_hosts)
+
         if containment_response:
             if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
                 successfully_contained_hosts.append(host_id)
                 print(Fore.BLUE + f"Successfully contained {host_id}" + Style.RESET_ALL)
+
+                if len(successfully_contained_hosts) > num_contained:
+                    progress_bar.update(1)
+                    progress_bar.set_postfix(contained=num_contained+1)
+
             elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
                 pending_contained_hosts.append(host_id)
             else:
@@ -128,10 +135,15 @@ def contain_hosts(hosts, client_id, client_secret):
             failed_to_contain_hosts.append(host_id)
             print(Fore.RED + f"Failed to contain {host_id}: No response from containment request" + Style.RESET_ALL)
 
-        # Update the progress bar
-        progress_bar.update(1)
+    # Close the progress bar once all hosts are contained
+    while len(successfully_contained_hosts) < len(hosts):
+        time.sleep(5)
+        containment_status(successfully_contained_hosts, client_id, client_secret)
+        num_contained = len(successfully_contained_hosts)
+        if len(successfully_contained_hosts) > num_contained:
+            progress_bar.update(1)
+            progress_bar.set_postfix(contained=num_contained+1)
 
-    # Close the progress bar
     progress_bar.close()
 
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
