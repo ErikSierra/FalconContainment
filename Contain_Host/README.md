@@ -10,7 +10,7 @@ Use this file to contain one or more hosts in your Crowdstrike environment
 
 ### Usage
 
-1. Insert your Crowdstrike API credentials into the YAML file in this format:
+1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml) in this format:
   api:
     client_id: <your client ID>
     client_secret: <your client secret>
@@ -31,7 +31,7 @@ python Containment.py
 Use this file to check the containment status on one or more hosts in your Crowdstrike environment
 
 ### Usage
-1. Insert your Crowdstrike API credentials into the YAML file in this format:
+1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml) in this format:
   api:
     client_id: <your client ID>
     client_secret: <your client secret>
@@ -49,11 +49,11 @@ python ContainmentStatus.py
 ## Lift_containment.py
 Use this file to lift containment on one or more hosts in your Crowdstrike environment
 ### Usage
-1. Insert your Crowdstrike API credentials into the YAML file in this format:
+1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml) in this format:
   api:
     client_id: <your client ID>
     client_secret: <your client secret>
-2. List the names of your hosts from your crowdstrike environment in the computers.txt file in this format:
+2. List the names of your hosts from your crowdstrike environment in the [computers.txtl](./computers.txt) in this format:
   Computer 1
   Computer 2
   Computer 3
