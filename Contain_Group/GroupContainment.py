@@ -33,7 +33,7 @@ def test_crowdstrike_connection(client_id, client_secret):
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
             print(Fore.BLUE + "Successfully connected to the CrowdStrike API. /n Groups found in your Crowdstrike "
-                              "environment: /n --------------------------------------------------" + Style.RESET_ALL)
+                              "environment: \n --------------------------------------------------" + Style.RESET_ALL)
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
             sys.exit(1)
@@ -198,8 +198,8 @@ def main():
         return
 
     # User selects a group ID
-    selected_group_id = input("--------------------------------------------------------------------------------------/n"
-                              "---Enter the Group ID to contain: /n Members found in your provided Group ID /n --------"
+    selected_group_id = input("--------------------------------------------------------------------------------------\n"
+                              "---Enter the Group ID to contain: /n Members found in your provided Group ID \n --------"
                               "---------------------------------------------------")
 
     # Retrieve and display group members
@@ -214,7 +214,7 @@ def main():
     while True:
         # Option to check containment status or lift containment
         action = input("----------------------------------------------------------------------------"
-                       "------------------------/n Do you want to check containment "
+                       "------------------------\n Do you want to check containment "
                        "status or lift containment? (status/lift/none): ").lower()
         if action == "status":
             containment_status(members, client_id, client_secret)
