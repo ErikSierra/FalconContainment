@@ -32,12 +32,3 @@ python GetGroupMembers.py
 python3 GetHostGroup.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET
 
 python GroupContainment
-
-pip install -r requirements.txt
-
-
-
-
-
-
-
