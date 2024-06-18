@@ -16,7 +16,7 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 + [References](#references-)
 
 ## Navigation 🔎
-- **FalconTests**
+- **[FalconTests](./FalconTests)**
      - Scripts used for testing/simulating processes of the project
 - **Contain_Host**
      - Scripts used to contain, check containment status, or lift containment on individual hosts
