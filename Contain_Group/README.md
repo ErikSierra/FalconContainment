@@ -1,8 +1,10 @@
 # Contain_Group
 For the following files, please ensure the correct Crowdstrike API credentials are inputted in the [config.yaml](./config.yaml) file
-+ [Get_Host_Group.py](#get_-host_-group-)
++ [GetHostGroup.py](#gethostgrouppy-)
++ [GetGroupMembers.py](#getgroupmemberspy)
++ [GroupContainment.py](#groupcontainmentpy)
 
-## Get_Host_Group.py 🔎
+## GetHostGroup.py 🔎
 
 Use this file to retrieve information on groups in your Crowdstrike environment
 
@@ -14,7 +16,7 @@ Use this file to retrieve information on groups in your Crowdstrike environment
 python3 Get_Host_Group.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET
 ```
 
-2. If you'd like to output the results to a txt file for easier visibility, please run the following prompt in your terminal
+2. If you'd like to output the results to a .txt file for easier visibility, please run the following prompt in your terminal
 ```
 python3 Get_Host_Group.py -k FALCON_CLIENT_ID -s FALCON_CLIENT_SECRET > FileName.txt
 ```
@@ -36,7 +38,7 @@ Use this file to retrieve information on members in your provided group in your 
   python GetGRoupMembers.py
   ```
   
-  If you'd like to output the results to a txt file for easier visibility, please run the following prompt in your terminal
+  If you'd like to output the results to a .txt file for easier visibility, please run the following prompt in your terminal
   ```
   python GetGroupMembers.py > FileName.txt
   ```
