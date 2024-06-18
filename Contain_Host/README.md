@@ -14,7 +14,8 @@ Use this file to contain one or more hosts in your Crowdstrike environment
   api:
     client_id: <your client ID>
     client_secret: <your client secret>
-2. List the names of your hosts from your crowdstrike environment in the computers.txt file in this format:
+2. List the names of your hosts from your crowdstrike environment in the [computers.txt](./computers.txt) file in this format:
+   
   Computer 1
   Computer 2
   Computer 3
