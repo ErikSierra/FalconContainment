@@ -33,7 +33,7 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 - Python 3.6 or higher installed.
 - `pip` (Python package installer) installed. You can install it from [here](https://pip.pypa.io/en/stable/installation/).
 
-2. Install the required Python packages listed in the requirements.txt file
+2. Install the required Python packages listed in the respective requirements.txt file
    ```bash
    pip install -r requirements.txt
    
