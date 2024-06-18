@@ -2,7 +2,7 @@
 For the following files, please ensure the correct Crowdstrike API credentials are inputted in the [config.yaml](./config.yaml) file
 + [GetHostGroup.py](https://github.com/ErikSierra/FalconContainment/blob/main/Contain_Group/README.md#gethostgrouppy-)
 + [GetGroupMembers.py](https://github.com/ErikSierra/FalconContainment/blob/main/Contain_Group/README.md#getgroupmemberspy-)
-+ [GroupContainment.py](https://github.com/ErikSierra/FalconContainment/tree/main/Contain_Group#groupcontainmentpy)
++ [GroupContainment.py](#groupcontainmentpy)
 
 ## GetHostGroup.py 🔎
 
