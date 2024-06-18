@@ -1,6 +1,8 @@
 # Contain_Group
 For the following files, please ensure the correct Crowdstrike API credentials are inputted in the [config.yaml](./config.yaml) file
 + [GetHostGroup.py](#get-host-group-)
++ [GetGroupMembers.py](#get-group-members-)
+
 
 ## Get_Host_Group.py 🔎
 
