@@ -10,7 +10,7 @@ import time
 init()
 
 # Constants
-CONFIG_FILE = '../FalconTests/config.yaml'
+CONFIG_FILE = 'config.yaml'
 
 
 # Function to load configuration
