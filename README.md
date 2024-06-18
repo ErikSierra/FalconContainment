@@ -40,7 +40,7 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
 3. Obtaining API Credentials
 - Before using the CrowdStrike API, you will need to obtain your client ID and client secret.
 - These can be obtained by logging into the CrowdStrike Falcon console and going to System Management > API Clients, then creating a new API client. You will be provided with the client ID and client secret.
-- Insert these credentials in the YAML file.
+- Insert these credentials into the config.yaml files where needed (More info in sub folders)
 
 
 
