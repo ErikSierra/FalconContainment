@@ -30,8 +30,10 @@ Use this file to check the containment status on one or more hosts in your Crowd
 1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml)*
 
 2. List the names of your hosts from your crowdstrike environment in the [computers.txt](./computers.txt)*
+
+   (If using this script after running 'GroupContainment.py', please copy/paste list of hosts from the provided output during script execution)
    
-3. Execute the script by running the following prompt in your terminal 
+4. Execute the script by running the following prompt in your terminal 
 ```
 python ContainmentStatus.py
 ```
