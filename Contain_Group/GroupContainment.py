@@ -81,8 +81,6 @@ def get_host_groups(client_id, client_secret):
         groups = response["body"]["resources"]
         for group in groups:
             print(f"ID: {group['id']}, Name: {group['name']}")
-        print("                                                                      ")
-        print("--------------------------------------------------------------------------------------------------------")
         return groups
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
@@ -94,8 +92,6 @@ def get_group_members(client_id, client_secret, group_id):
     falcon = HostGroup(client_id=client_id, client_secret=client_secret)
     response = falcon.query_combined_group_members(id=group_id, limit=5000)
     if response['status_code'] == 200:
-        print("                                                                                            ")
-        print("Members found in your provided Group ID:")
         members = response["body"]["resources"]
         for member in members:
             print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
@@ -201,61 +197,35 @@ def main():
     if not groups:
         return
 
-    current_group_id = None
+    # User selects a group ID
+    selected_group_id = input("--------------------------------------------------------------------------------------\n"
+                              "---Enter the Group ID to contain: \n Members found in your provided Group ID \n --------"
+                              "---------------------------------------------------")
+
+    # Retrieve and display group members
+    members = get_group_members(client_id, client_secret, selected_group_id)
+    if not members:
+        print("No members found in the selected group.")
+        return
+
+    # Contain hosts
+    contain_hosts(members, client_id, client_secret)
+
     while True:
-        if current_group_id is None:
-            # User selects a group ID
-            selected_group_id = input("Enter your Group ID: ")
+        # Option to check containment status or lift containment
+        action = input("----------------------------------------------------------------------------"
+                       "------------------------\n Do you want to check containment "
+                       "status or lift containment? (status/lift/none): ").lower()
+        if action == "status":
+            containment_status(members, client_id, client_secret)
+        elif action == "lift":
+            lift_containment(members, client_id, client_secret)
+        elif action == "none":
+            print("No further action taken.")
+            print("To check the containment status of provided hosts, please use 'ContainmentStatus.py' in 'Contain_Host' folder. \n Refer to the README for further instructions.")
+            break
         else:
-            # Ask the user if they want to use the current group ID again
-            while True:
-                response = input(f"Do you want to use the current Group ID ({current_group_id})? (y/n): ").lower()
-                if response == "y":
-                    selected_group_id = current_group_id
-                    break
-                elif response == "n":
-                    selected_group_id = input("Enter a new Group ID to contain: ")
-                    current_group_id = selected_group_id
-                    break
-                else:
-                    print("Invalid input. Please enter 'y' or 'n'.")
-
-        # Retrieve and display group members
-        members = get_group_members(client_id, client_secret, selected_group_id)
-        if not members:
-            print("No members found in the selected group.")
-            current_group_id = None
-            continue
-
-        # Ask the user whether to contain or lift containment for the group members
-        while True:
-            action = input("\nDo you want to contain, check status, lift containment, or do nothing? (contain/lift/none): ").lower()
-            if action == "contain":
-                contain_hosts(members, client_id, client_secret)
-                break
-            if action == "status":
-                containment_status(members, client_id, client_secret)
-                break
-            elif action == "lift":
-                lift_containment(members, client_id, client_secret)
-                break
-            elif action == "none":
-                print("No further action taken.")
-                current_group_id = None
-                break
-            else:
-                print("Invalid input. Please enter 'contain', 'status', 'lift', or 'none'.")
-
-        # Ask the user if they want to continue
-        while True:
-            response = input("Do you want to contain/check status, or lift containment for another group? (y/n): ").lower()
-            if response == "y":
-                current_group_id = None
-                break
-            elif response == "n":
-                return
-            else:
-                print("Invalid input. Please enter 'y' or 'n'.")
+            print("Invalid input. Please enter 'status', 'lift', or 'none'.")
 
 
 if __name__ == "__main__":
