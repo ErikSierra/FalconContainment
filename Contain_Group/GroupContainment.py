@@ -95,6 +95,7 @@ def get_group_members(client_id, client_secret, group_id):
         members = response["body"]["resources"]
         print("                                                                                                   ")
         print("-------------------------------------------------------------------------------------------------------------")
+        print("Members found in your group:")
         for member in members:
             print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
         return [member['device_id'] for member in members]
