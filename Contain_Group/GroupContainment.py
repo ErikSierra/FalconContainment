@@ -209,7 +209,7 @@ def main():
         return
 
     # Contain hosts
-    contain_hosts(members, client_id, client_secret)
+    # contain_hosts(members, client_id, client_secret)
 
     while True:
         # Option to check containment status or lift containment
