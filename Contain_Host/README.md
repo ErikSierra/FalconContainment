@@ -5,7 +5,7 @@ These files are used for the following purposes:
 - Check containment status
 - Lift containment
 
-**-----THESE SCRIPTs INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
+**-----THESE SCRIPTS INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
 
 
 ## Containment.py
