@@ -199,7 +199,7 @@ def main():
 
     # User selects a group ID
     selected_group_id = input("--------------------------------------------------------------------------------------\n"
-                              "---Enter the Group ID to contain: /n Members found in your provided Group ID \n --------"
+                              "---Enter the Group ID to contain: \n Members found in your provided Group ID \n --------"
                               "---------------------------------------------------")
 
     # Retrieve and display group members
