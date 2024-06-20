@@ -94,7 +94,7 @@ def get_group_members(client_id, client_secret, group_id):
     if response['status_code'] == 200:
         members = response["body"]["resources"]
         for member in members:
-            print ("                                                                                            ")
+            print("                                                                                            ")
             print("Members found in your provided Group ID:")
             print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
         return [member['device_id'] for member in members]
