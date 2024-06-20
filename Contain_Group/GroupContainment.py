@@ -165,7 +165,7 @@ def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_
     for host in pending_contained_hosts:
         print(Fore.YELLOW + f"- {host}" + Style.RESET_ALL)
 
-    print(Fore.RED + "\nFailed to contain hosts:" + Style.RESET_ALL)
+    print(Fore.RED + "\nHosts not contained:" + Style.RESET_ALL)
     for host in failed_to_contain_hosts:
         print(Fore.RED + f"- {host}" + Style.RESET_ALL)
 
