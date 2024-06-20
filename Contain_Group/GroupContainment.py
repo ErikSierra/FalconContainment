@@ -200,8 +200,7 @@ def main():
         return
 
     # User selects a group ID
-    selected_group_id = input("--------------------------------------------------------------------------------------\n"
-                              "---Enter the Group ID to contain: ")
+    selected_group_id = input("Enter the Group ID to contain: ")
 
     # Retrieve and display group members
     members = get_group_members(client_id, client_secret, selected_group_id)
@@ -209,24 +208,26 @@ def main():
         print("No members found in the selected group.")
         return
 
-    # Contain hosts
-    contain_hosts(members, client_id, client_secret)
+    # Print group member details
+    print("\nHere are the members of the selected group:")
+    for member in members:
+        print(f" - Host ID: {member}")
 
+    # Ask the user whether to contain or lift containment for the group members
     while True:
-        # Option to check containment status or lift containment
-        action = input("----------------------------------------------------------------------------"
-                       "------------------------\n Do you want to check containment "
-                       "status or lift containment? (status/lift/none): ").lower()
-        if action == "status":
-            containment_status(members, client_id, client_secret)
+        action = input("\nDo you want to contain, lift containment, or do nothing? (contain/lift/none): ").lower()
+        if action == "contain":
+            contain_hosts(members, client_id, client_secret)
+            break
         elif action == "lift":
             lift_containment(members, client_id, client_secret)
+            break
         elif action == "none":
             print("No further action taken.")
             print("To check the containment status of provided hosts, please use 'ContainmentStatus.py' in 'Contain_Host' folder. \n Refer to the README for further instructions.")
             break
         else:
-            print("Invalid input. Please enter 'status', 'lift', or 'none'.")
+            print("Invalid input. Please enter 'contain', 'lift', or 'none'.")
 
 
 if __name__ == "__main__":
