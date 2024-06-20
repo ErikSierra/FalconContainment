@@ -24,6 +24,9 @@ This project leverages the CrowdStrike Falcon API to automate the containment pr
      - Scripts used to contain or lift containment on multiple hosts in a group
 
 ## Flowchart
+All scripts can be executed individually according to the user's needs.
+
+GroupContainment.py performs every script's process in automatic sequence in order to streamline mass containment 
 ![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/f0150eb4-c9e0-42bf-9456-30a8c9dc297c)
 
 
