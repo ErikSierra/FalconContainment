@@ -214,10 +214,11 @@ def main():
     while True:
         # Option to check containment status or lift containment
         action = input("----------------------------------------------------------------------------"
-                       "------------------------\n Do you want to check containment "
-                       "status or lift containment? (status/lift/none): ").lower()
+                       "------------------------\n Do you want to contain the hosts, check status, lift containment, or none? (contain/status/lift/none): ").lower()
         if action == "status":
             containment_status(members, client_id, client_secret)
+        elif action == "contain":
+            contain_hosts(members, client_id, client_secret)
         elif action == "lift":
             lift_containment(members, client_id, client_secret)
         elif action == "none":
