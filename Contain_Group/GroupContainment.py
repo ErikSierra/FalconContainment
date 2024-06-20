@@ -32,7 +32,7 @@ def test_crowdstrike_connection(client_id, client_secret):
         falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
-            print(Fore.BLUE + "Successfully connected to the CrowdStrike API. /n Groups found in your Crowdstrike "
+            print(Fore.BLUE + "Successfully connected to the CrowdStrike API. \n Groups found in your Crowdstrike "
                               "environment: \n --------------------------------------------------" + Style.RESET_ALL)
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
@@ -81,6 +81,8 @@ def get_host_groups(client_id, client_secret):
         groups = response["body"]["resources"]
         for group in groups:
             print(f"ID: {group['id']}, Name: {group['name']}")
+        print("                                                                      ")
+        print("--------------------------------------------------------------------------------------------------------")
         return groups
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
@@ -207,11 +209,6 @@ def main():
     if not members:
         print("No members found in the selected group.")
         return
-
-    # Print group member details
-    print("\nHere are the members of the selected group:")
-    for member in members:
-        print(f" - Host ID: {member}")
 
     # Ask the user whether to contain or lift containment for the group members
     while True:
