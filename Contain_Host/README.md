@@ -1,11 +1,12 @@
 # Contain_Host
 
+**-----THESE SCRIPTS INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
+
+
 These files are used for the following purposes:
 - Contain host(s)
 - Check containment status
 - Lift containment
-
-**-----THESE SCRIPTs INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
 
 
 ## Containment.py
@@ -30,8 +31,10 @@ Use this file to check the containment status on one or more hosts in your Crowd
 1. Insert your Crowdstrike API credentials into the [config.yaml](./config.yaml)*
 
 2. List the names of your hosts from your crowdstrike environment in the [computers.txt](./computers.txt)*
+
+   (If using this script after running 'GroupContainment.py', please copy/paste list of hosts from the provided output during script execution)
    
-3. Execute the script by running the following prompt in your terminal 
+4. Execute the script by running the following prompt in your terminal 
 ```
 python ContainmentStatus.py
 ```
