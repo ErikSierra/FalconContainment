@@ -93,6 +93,8 @@ def get_group_members(client_id, client_secret, group_id):
     response = falcon.query_combined_group_members(id=group_id, limit=5000)
     if response['status_code'] == 200:
         members = response["body"]["resources"]
+        print("                                                                                                   ")
+        print("-------------------------------------------------------------------------------------------------------------")
         for member in members:
             print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
         return [member['device_id'] for member in members]
@@ -199,8 +201,7 @@ def main():
 
     # User selects a group ID
     selected_group_id = input("--------------------------------------------------------------------------------------\n"
-                              "---Enter your Group ID: \n Members found in your provided Group ID \n --------"
-                              "---------------------------------------------------")
+                              "---Enter your Group ID: ")
 
     # Retrieve and display group members
     members = get_group_members(client_id, client_secret, selected_group_id)
