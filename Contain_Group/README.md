@@ -63,7 +63,7 @@ api:
 python GroupContainment.py
 ```
 
-3. After the user selects 'none', the script process will terminate. If you would like to check containment status of the hosts after, please use the 'ContainmentStatus' script in the [ContainHost](https://github.com/ErikSierra/FalconContainment/tree/main/ContainHost)
+3. After the user selects 'none', the script process will terminate. If you would like to check containment status of the hosts after, please use the 'ContainmentStatus' script in the [Contain_Host](https://github.com/ErikSierra/FalconContainment/tree/main/Contain_Host)
  folder. (Remember to insert list of hosts in the computers.txt file - More details in README)
 #### Example result 
 ![image](https://github.com/ErikSierra/FalconContainment/assets/120680439/a82ca025-7502-476c-bd68-c2da35cde17a)
