@@ -1,11 +1,12 @@
 # Contain_Host
 
+**-----THESE SCRIPTS INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
+
+
 These files are used for the following purposes:
 - Contain host(s)
 - Check containment status
 - Lift containment
-
-**-----THESE SCRIPTS INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
 
 
 ## Containment.py
