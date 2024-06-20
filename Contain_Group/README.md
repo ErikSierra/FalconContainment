@@ -1,4 +1,5 @@
 # Contain_Group
+**-----THESE SCRIPTS INTERACTS WITH YOUR CROWDSTRIKE ENVIRONMENT. PLEASE PROCEED WITH CAUTION-----**
 For the following files, please ensure the correct Crowdstrike API credentials are inputted in the [config.yaml](./config.yaml) file
 + [GetHostGroup.py](#gethostgrouppy-)
 + [GetGroupMembers.py](#getgroupmemberspy)
