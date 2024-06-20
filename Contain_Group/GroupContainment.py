@@ -205,7 +205,7 @@ def main():
     while True:
         if current_group_id is None:
             # User selects a group ID
-            selected_group_id = input("Enter the Group ID to contain: ")
+            selected_group_id = input("Enter your Group ID: ")
         else:
             # Ask the user if they want to use the current group ID again
             while True:
@@ -229,9 +229,12 @@ def main():
 
         # Ask the user whether to contain or lift containment for the group members
         while True:
-            action = input("\nDo you want to contain, lift containment, or do nothing? (contain/lift/none): ").lower()
+            action = input("\nDo you want to contain, check status, lift containment, or do nothing? (contain/lift/none): ").lower()
             if action == "contain":
                 contain_hosts(members, client_id, client_secret)
+                break
+            if action == "status":
+                containment_status(members, client_id, client_secret)
                 break
             elif action == "lift":
                 lift_containment(members, client_id, client_secret)
@@ -241,11 +244,11 @@ def main():
                 current_group_id = None
                 break
             else:
-                print("Invalid input. Please enter 'contain', 'lift', or 'none'.")
+                print("Invalid input. Please enter 'contain', 'status', 'lift', or 'none'.")
 
         # Ask the user if they want to continue
         while True:
-            response = input("Do you want to contain/lift containment for another group? (y/n): ").lower()
+            response = input("Do you want to contain/check status, or lift containment for another group? (y/n): ").lower()
             if response == "y":
                 current_group_id = None
                 break
