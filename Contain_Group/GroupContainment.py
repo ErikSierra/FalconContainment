@@ -126,7 +126,7 @@ def contain_hosts(hosts, client_id, client_secret):
         else:
             failed_to_contain_hosts.append(host_id)
             print(Fore.RED + f"Failed to contain {host_id}: No response from containment request" + Style.RESET_ALL)
-    
+
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
 
 
@@ -151,7 +151,7 @@ def lift_containment(hosts, client_id, client_secret):
         else:
             failed_to_uncontain_hosts.append(host_id)
             print(Fore.RED + f"Failed to un-contain {host_id}: No response from un-containment request" + Style.RESET_ALL)
-    
+
     print_summary(successfully_uncontained_hosts, pending_uncontained_hosts, failed_to_uncontain_hosts)
 
 
@@ -201,30 +201,58 @@ def main():
     if not groups:
         return
 
-    # User selects a group ID
-    selected_group_id = input("Enter the Group ID to contain: ")
-
-    # Retrieve and display group members
-    members = get_group_members(client_id, client_secret, selected_group_id)
-    if not members:
-        print("No members found in the selected group.")
-        return
-
-    # Ask the user whether to contain or lift containment for the group members
+    current_group_id = None
     while True:
-        action = input("\nDo you want to contain, lift containment, or do nothing? (contain/lift/none): ").lower()
-        if action == "contain":
-            contain_hosts(members, client_id, client_secret)
-            break
-        elif action == "lift":
-            lift_containment(members, client_id, client_secret)
-            break
-        elif action == "none":
-            print("No further action taken.")
-            print("To check the containment status of provided hosts, please use 'ContainmentStatus.py' in 'Contain_Host' folder. \n Refer to the README for further instructions.")
-            break
+        if current_group_id is None:
+            # User selects a group ID
+            selected_group_id = input("Enter the Group ID to contain: ")
         else:
-            print("Invalid input. Please enter 'contain', 'lift', or 'none'.")
+            # Ask the user if they want to use the current group ID again
+            while True:
+                response = input(f"Do you want to use the current Group ID ({current_group_id})? (y/n): ").lower()
+                if response == "y":
+                    selected_group_id = current_group_id
+                    break
+                elif response == "n":
+                    selected_group_id = input("Enter a new Group ID to contain: ")
+                    current_group_id = selected_group_id
+                    break
+                else:
+                    print("Invalid input. Please enter 'y' or 'n'.")
+
+        # Retrieve and display group members
+        members = get_group_members(client_id, client_secret, selected_group_id)
+        if not members:
+            print("No members found in the selected group.")
+            current_group_id = None
+            continue
+
+        # Ask the user whether to contain or lift containment for the group members
+        while True:
+            action = input("\nDo you want to contain, lift containment, or do nothing? (contain/lift/none): ").lower()
+            if action == "contain":
+                contain_hosts(members, client_id, client_secret)
+                break
+            elif action == "lift":
+                lift_containment(members, client_id, client_secret)
+                break
+            elif action == "none":
+                print("No further action taken.")
+                current_group_id = None
+                break
+            else:
+                print("Invalid input. Please enter 'contain', 'lift', or 'none'.")
+
+        # Ask the user if they want to continue
+        while True:
+            response = input("Do you want to contain/lift containment for another group? (y/n): ").lower()
+            if response == "y":
+                current_group_id = None
+                break
+            elif response == "n":
+                return
+            else:
+                print("Invalid input. Please enter 'y' or 'n'.")
 
 
 if __name__ == "__main__":
