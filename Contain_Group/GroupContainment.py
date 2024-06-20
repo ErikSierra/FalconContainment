@@ -222,6 +222,7 @@ def main():
             lift_containment(members, client_id, client_secret)
         elif action == "none":
             print("No further action taken.")
+            print("To check the containment status of provided hosts, please use 'ContainmentStatus.py' in 'Contain_Host' folder. \n Refer to the README for further instructions.")
             break
         else:
             print("Invalid input. Please enter 'status', 'lift', or 'none'.")
