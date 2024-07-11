@@ -34,6 +34,7 @@ from tabulate import tabulate
 # client_secret = config['api']['client_secret']
 
 
+
 def consume_arguments() -> Namespace:
     """Consume any provided command line arguments."""
     parser = ArgumentParser(description=__doc__, formatter_class=RawTextHelpFormatter)
