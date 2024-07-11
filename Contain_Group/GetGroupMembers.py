@@ -3,7 +3,7 @@ import yaml
 import sys
 from falconpy import HostGroup
 
-# Constants.
+# Constants
 CONFIG_FILE = 'config.yaml'
 # GROUP_ID = '123456789'  # Replace with your actual group ID
 GROUP_ID = input("Please enter group ID: ")
