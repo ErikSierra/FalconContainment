@@ -57,19 +57,8 @@ def consume_arguments() -> Namespace:
                         default="simple"
                         )
     req = parser.add_argument_group("Required arguments")
-    # req.add_argument("-k", "--client_id",
-    #                  help="CrowdStrike Falcon API key",
-    #                  default=os.getenv("FALCON_CLIENT_ID")
-    #                  )
-    # req.add_argument("-s", "--client_secret",
-    #                  help="CrowdStrike Falcon API secret",
-    #                  default=os.getenv("FALCON_CLIENT_SECRET")
-    #                  )
-    parsed = parser.parse_args()
 
-    
-    # if not parsed.client_id or not parsed.client_secret:
-    #     parser.error("You must provide CrowdStrike API credentials using the '-k' and '-s' arguments.")
+    parsed = parser.parse_args()
 
     return parsed
 
