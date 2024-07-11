@@ -7,7 +7,22 @@ import logging
 from argparse import ArgumentParser, RawTextHelpFormatter, Namespace
 from falconpy import APIHarnessV2, APIError
 from tabulate import tabulate
+import yaml
+import sys
 
+# Function to load configuration
+def load_config(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Error: Configuration file '{file_path}' not found.")
+        return None
+
+    try:
+        with open(file_path, 'r') as f:
+            config = yaml.safe_load(f)
+            return config
+    except yaml.YAMLError as e:
+        print(f"Error reading configuration file: {e}")
+        return None
 
 def consume_arguments() -> Namespace:
     """Consume any provided command line arguments."""
@@ -54,11 +69,21 @@ if cmd_line.debug:
 
 # Create our base authentication dictionary (parent / child)
 auth = {
-    "client_id": cmd_line.client_id,
-    "client_secret": cmd_line.client_secret,
+    # "client_id": cmd_line.client_id,
+    # "client_secret": cmd_line.client_secret,
     "debug": cmd_line.debug,
     "pythonic": True
 }
+
+CONFIG_FILE = 'config.yaml'
+# Load the configuration
+config = load_config(CONFIG_FILE)
+if not config:
+    sys.exit(1)
+
+client_id = config['api']['client_id']
+client_secret = config['api']['client_secret']
+
 # If we are in MSSP mode, retrieve our child CID details
 if cmd_line.mssp:
     parent = APIHarnessV2(**auth)
