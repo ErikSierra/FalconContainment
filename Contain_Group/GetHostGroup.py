@@ -24,6 +24,16 @@ from tabulate import tabulate
 #         print(f"Error reading configuration file: {e}")
 #         return None
 
+# CONFIG_FILE = 'config.yaml'
+# # Load the configuration
+# config = load_config(CONFIG_FILE)
+# if not config:
+#     sys.exit(1)
+
+# client_id = config['api']['client_id']
+# client_secret = config['api']['client_secret']
+
+
 def consume_arguments() -> Namespace:
     """Consume any provided command line arguments."""
     parser = ArgumentParser(description=__doc__, formatter_class=RawTextHelpFormatter)
@@ -75,15 +85,6 @@ auth = {
     "debug": cmd_line.debug,
     "pythonic": True
 }
-
-# CONFIG_FILE = 'config.yaml'
-# # Load the configuration
-# config = load_config(CONFIG_FILE)
-# if not config:
-#     sys.exit(1)
-
-# client_id = config['api']['client_id']
-# client_secret = config['api']['client_secret']
 
 # If we are in MSSP mode, retrieve our child CID details
 if cmd_line.mssp:
