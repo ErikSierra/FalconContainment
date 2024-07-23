@@ -37,8 +37,6 @@ if not config:
 CLIENT_ID = config['api']['client_id']
 CLIENT_SECRET = config['api']['client_secret']
 
-print(CLIENT_ID, CLIENT_SECRET)
-
 # Initialize the API harness
 falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
@@ -64,8 +62,8 @@ def list_host_group_members(group_id):
         for member in members:
             hostname = member.get('hostname', 'Unknown hostname')
             host_id = member.get('device_id', 'Unknown ID')
-            line = [hostname, host_id, "\n"]
-            hosts.write(line)
+            line = [hostname, "     ", host_id, "\n"]
+            hosts.writelines(line)
             print(f"{hostname:<30} {host_id}")
     
     except Exception as e:
