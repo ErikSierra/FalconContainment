@@ -74,3 +74,5 @@ def list_host_group_members(group_id):
 
 # List the members of the specified host group
 list_host_group_members(GROUP_ID)
+
+hosts.close()
