@@ -57,8 +57,8 @@ def list_host_group_members(group_id):
             return
         
         # Print headers
-        print(f"{'Hostname':<30} {'Host ID'}")
-        print(f"{'-'*30} {'-'*10}")
+        # print(f"{'Hostname':<30} {'Host ID'}")
+        # print(f"{'-'*30} {'-'*10}")
         
         hostNames, hostIds = list(), list()
         for member in members:
