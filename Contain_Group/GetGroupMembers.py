@@ -3,6 +3,12 @@ import yaml
 import sys
 from falconpy import HostGroup
 
+
+#open a text file
+hosts = open("Hosts.txt", "w")
+
+
+
 # Constants
 CONFIG_FILE = 'config.yaml'
 # GROUP_ID = '123456789'  # Replace with your actual group ID
@@ -31,6 +37,8 @@ if not config:
 CLIENT_ID = config['api']['client_id']
 CLIENT_SECRET = config['api']['client_secret']
 
+print(CLIENT_ID, CLIENT_SECRET)
+
 # Initialize the API harness
 falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
@@ -56,6 +64,8 @@ def list_host_group_members(group_id):
         for member in members:
             hostname = member.get('hostname', 'Unknown hostname')
             host_id = member.get('device_id', 'Unknown ID')
+            line = [hostname, host_id, "\n"]
+            hosts.write(line)
             print(f"{hostname:<30} {host_id}")
     
     except Exception as e:
