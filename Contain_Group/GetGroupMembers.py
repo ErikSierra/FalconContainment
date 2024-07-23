@@ -2,11 +2,12 @@ import os
 import yaml
 import sys
 from falconpy import HostGroup
-
+import pandas as pd 
 
 #open a text file
 hosts = open("Hosts.txt", "w")
-
+# hosts.write(str(datetime.datetime.now()))
+# hosts.write("\n")
 
 
 # Constants
@@ -58,14 +59,26 @@ def list_host_group_members(group_id):
         # Print headers
         print(f"{'Hostname':<30} {'Host ID'}")
         print(f"{'-'*30} {'-'*10}")
-
+        
+        hostNames, hostIds = list(), list()
         for member in members:
             hostname = member.get('hostname', 'Unknown hostname')
             host_id = member.get('device_id', 'Unknown ID')
-            line = [hostname, "     ", host_id, "\n"]
-            hosts.writelines(line)
-            print(f"{hostname:<30} {host_id}")
-    
+
+            hostNames.append(hostname)
+            hostIds.append(host_id)
+            # line = [hostname, "     ", host_id, "\n"]
+            # hosts.writelines(line)
+            # print(f"{hostname:<30} {host_id}")
+        data = {
+            'Host_Name' : hostNames,
+            'HostIds' : hostIds
+        }
+
+        df = pd.DataFrame(data) 
+        print(df)
+        hosts.write(str(df))
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
