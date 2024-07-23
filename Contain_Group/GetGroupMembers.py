@@ -77,9 +77,10 @@ def list_host_group_members(group_id):
         pd.set_option('display.max_rows', None)
 
         df = pd.DataFrame(data) 
-
+        print("\n")
         print(df)
         hosts.write(str(df))
+        print("\n")
 
     except Exception as e:
         print(f"An error occurred: {e}")
