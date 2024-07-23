@@ -74,8 +74,10 @@ def list_host_group_members(group_id):
             'Host_Name' : hostNames,
             'HostIds' : hostIds
         }
+        pd.set_option('display.max_rows', None)
 
         df = pd.DataFrame(data) 
+
         print(df)
         hosts.write(str(df))
 
