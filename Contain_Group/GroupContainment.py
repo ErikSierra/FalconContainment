@@ -1,30 +1,10 @@
-import os
-import yaml
 import json
 import sys
 from falconpy import Hosts, HostGroup, APIError
 from colorama import init, Fore, Style
-
+from LoadConfig import load_config # loads config.yaml
+import pandas as pd
 init()
-
-# Constants
-CONFIG_FILE = 'config.yaml'
-
-
-# Function to load configuration
-def load_config(file_path):
-    if not os.path.isfile(file_path):
-        print(f"Error: Configuration file '{file_path}' not found.")
-        sys.exit(1)
-
-    try:
-        with open(file_path, 'r') as f:
-            config = yaml.safe_load(f)
-            return config
-    except yaml.YAMLError as e:
-        print(f"Error reading configuration file: {e}")
-        sys.exit(1)
-
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(client_id, client_secret):
@@ -32,8 +12,8 @@ def test_crowdstrike_connection(client_id, client_secret):
         falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
-            print(Fore.BLUE + "Successfully connected to the CrowdStrike API. \n Groups found in your Crowdstrike "
-                              "environment: \n --------------------------------------------------" + Style.RESET_ALL)
+            print(Fore.BLUE + "Successfully connected to the CrowdStrike API \nGroups found in your Crowdstrike environment:"
+                   + Style.RESET_ALL)
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
             sys.exit(1)
@@ -48,7 +28,6 @@ def test_crowdstrike_connection(client_id, client_secret):
         print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
         sys.exit(1)
 
-
 # Function to contain a host by its ID
 def contain_host_by_id(falcon_hosts, host_id):
     try:
@@ -59,7 +38,6 @@ def contain_host_by_id(falcon_hosts, host_id):
     except Exception as e:
         print(Fore.RED + f"Error containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
-
 
 # Function to un-contain a host by its ID
 def uncontain_host_by_id(falcon_hosts, host_id):
@@ -72,20 +50,28 @@ def uncontain_host_by_id(falcon_hosts, host_id):
         print(Fore.RED + f"Error un-containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
 
-
 # Function to get host groups
 def get_host_groups(client_id, client_secret):
     falcon = HostGroup(client_id=client_id, client_secret=client_secret)
     response = falcon.query_combined_host_groups()
+    groupsID, groupsName = list(), list()
+    
     if response["status_code"] == 200:
         groups = response["body"]["resources"]
         for group in groups:
-            print(f"ID: {group['id']}, Name: {group['name']}")
+            groupsID.append(group['id'])
+            groupsName.append(group['name'])
+        data = {
+            'Group Name' : groupsName,
+            'Group Ids' : groupsID
+        }
+        pd.set_option('display.max_rows', None)
+        df = pd.DataFrame(data) 
+        print("\n", df, "\n")
         return groups
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
         return []
-
 
 # Function to get group members
 def get_group_members(client_id, client_secret, group_id):
@@ -93,16 +79,21 @@ def get_group_members(client_id, client_secret, group_id):
     response = falcon.query_combined_group_members(id=group_id, limit=5000)
     if response['status_code'] == 200:
         members = response["body"]["resources"]
-        print("                                                                                                   ")
-        print("-------------------------------------------------------------------------------------------------------------")
-        print("Members found in your group:")
+        hostNames, hostIds = list(), list()
         for member in members:
-            print(f"Host ID: {member['device_id']}, Hostname: {member['hostname']}")
+            hostNames.append(member['device_id'])
+            hostIds.append(member['hostname'])
+        data = {
+            'Host Name' : hostNames,
+            'Host Ids' : hostIds
+        }
+        pd.set_option('display.max_rows', None)
+        df = pd.DataFrame(data) 
+        print("\n", df, "\n")
         return [member['device_id'] for member in members]
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
         return []
-
 
 # Function to contain hosts
 def contain_hosts(hosts, client_id, client_secret):
@@ -184,49 +175,35 @@ def containment_status(hosts, client_id, client_secret):
 
 
 def main():
-    # Load the configuration
-    config = load_config(CONFIG_FILE)
-    if not config:
-        return
+    config = load_config('config.yaml')     # Load the configuration
 
-    client_id = config['api']['client_id']
-    client_secret = config['api']['client_secret']
+    CLIENT_ID, SECRET_ID = config['client_id'], config['client_secret']
 
-    # Test the connection to the CrowdStrike API
-    test_crowdstrike_connection(client_id, client_secret)
+    test_crowdstrike_connection(CLIENT_ID, SECRET_ID)    # Test the connection to the CrowdStrike API
 
-    # Retrieve and display host groups
-    groups = get_host_groups(client_id, client_secret)
-    if not groups:
-        return
+    groups = get_host_groups(config['client_id'], config['client_secret'])     # Retrieve and display host groups
+    if not groups: return  
 
     # User selects a group ID
-    selected_group_id = input("--------------------------------------------------------------------------------------\n"
-                              "---Enter your Group ID: ")
+    selected_group_id = input("Enter your Group ID: ")
 
     # Retrieve and display group members
-    members = get_group_members(client_id, client_secret, selected_group_id)
+    members = get_group_members(config['client_id'], config['client_secret'], selected_group_id)
     if not members:
         print("No members found in the selected group.")
         return
 
-    # Contain hosts
-    # contain_hosts(members, client_id, client_secret)
-
     while True:
         # Option to check containment status or lift containment
-        action = input("----------------------------------------------------------------------------"
-                       "------------------------\n Do you want to contain the hosts, check status, lift containment, or none? (contain/status/lift/none): ").lower()
+        action = input("Do you want to contain the hosts, check status, lift containment, or none? (contain/status/lift/none): ").lower()
         if action == "status":
-            containment_status(members, client_id, client_secret)
+            containment_status(members, config['client_id'], config['client_secret'])
         elif action == "contain":
-            contain_hosts(members, client_id, client_secret)
+            contain_hosts(members, config['client_id'], config['client_secret'])
         elif action == "lift":
-            lift_containment(members, client_id, client_secret)
+            lift_containment(members, config['client_id'], config['client_secret'])
         elif action == "none":
             print("No further action taken.")
-            # print("To check the containment status of provided hosts, please use 'ContainmentStatus.py' in 'Contain_Host' folder. \n Refer to the README for further
-            # instructions.")
             break
         else:
             print("Invalid input. Please enter 'status', 'lift', or 'none'.")

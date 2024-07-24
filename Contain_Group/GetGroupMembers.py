@@ -1,48 +1,15 @@
-import os
-import yaml
-import sys
 from falconpy import HostGroup
 import pandas as pd 
+from LoadConfig import load_config # loads config.yaml
 
-#open a text file
-hosts = open("Hosts.txt", "w")
-# hosts.write(str(datetime.datetime.now()))
-# hosts.write("\n")
+config = load_config('config.yaml')
 
+hosts = open("Hosts.txt", "w") #open a text file named hosts
+GROUP_ID = input("Please enter group ID: ") #get group id from user
 
-# Constants
-CONFIG_FILE = 'config.yaml'
-# GROUP_ID = '123456789'  # Replace with your actual group ID
-GROUP_ID = input("Please enter group ID: ")
+falcon = HostGroup(client_id = config['client_id'], client_secret = config['client_secret']) # Initialize the API harness
 
-# Function to load configuration
-def load_config(file_path):
-    if not os.path.isfile(file_path):
-        print(f"Error: Configuration file '{file_path}' not found.")
-        return None
-
-    try:
-        with open(file_path, 'r') as f:
-            config = yaml.safe_load(f)
-            return config
-    except yaml.YAMLError as e:
-        print(f"Error reading configuration file: {e}")
-        return None
-
-
-# Load the configuration
-config = load_config(CONFIG_FILE)
-if not config:
-    sys.exit(1)
-
-CLIENT_ID = config['api']['client_id']
-CLIENT_SECRET = config['api']['client_secret']
-
-# Initialize the API harness
-falcon = HostGroup(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-
-
-# Function to list and print the names and IDs of the members of a host group
+# Function to print the names and IDs of the members of a host group and export to Hosts.txt
 def list_host_group_members(group_id):
     try:
         response = falcon.query_combined_group_members(id=group_id, limit=5000)
@@ -52,41 +19,24 @@ def list_host_group_members(group_id):
         
         # Extract and print hostnames and IDs
         members = response['body']['resources']
-        if not members:
-            print("No hosts found in the group.")
-            return
-        
-        # Print headers
-        # print(f"{'Hostname':<30} {'Host ID'}")
-        # print(f"{'-'*30} {'-'*10}")
-        
         hostNames, hostIds = list(), list()
-        for member in members:
-            hostname = member.get('hostname', 'Unknown hostname')
-            host_id = member.get('device_id', 'Unknown ID')
 
-            hostNames.append(hostname)
-            hostIds.append(host_id)
-            # line = [hostname, "     ", host_id, "\n"]
-            # hosts.writelines(line)
-            # print(f"{hostname:<30} {host_id}")
+        for member in members:
+            hostNames.append(member.get('hostname', 'Unknown hostname'))
+            hostIds.append(member.get('device_id', 'Unknown ID'))
+
         data = {
             'Host_Name' : hostNames,
             'HostIds' : hostIds
         }
         pd.set_option('display.max_rows', None)
-
         df = pd.DataFrame(data) 
-        print("\n")
-        print(df)
+        print("\n", df, "\n")
         hosts.write(str(df))
-        print("\n")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
-# List the members of the specified host group
-list_host_group_members(GROUP_ID)
+list_host_group_members(GROUP_ID) # List the members of the specified host group
 
 hosts.close()
