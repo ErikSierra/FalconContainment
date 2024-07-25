@@ -1,3 +1,4 @@
+import requests
 from LoadConfig import load_config # loads config.yaml
 authUrl = 'https://api.crowdstrike.com/oauth2/token'
 
