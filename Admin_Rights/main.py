@@ -12,7 +12,7 @@ else:
 
 
 #gets device id
-hostname = input("Please input target hostname: ") 
+hostname = input("Please input target hostname: ") #takes host name as input
 device_id = getDeviceId(token, hostname)
 
 
@@ -21,7 +21,7 @@ session_id = initiateRtrSession(token, device_id)
 
 
 #removes admin rights
-username = input("Please enter target device username: ")
+username = input("Please enter target device username: ") #takes username as input
 result = removeAdminRights(token, session_id, username)
 
 
