@@ -35,4 +35,4 @@ with APIHarnessV2(**auth) as sdk:
     # Print the DataFrame
     print("\n", df, "\n")
         
-df.to_csv('host_groups.csv')
+df.to_csv('HostGroups.csv')
