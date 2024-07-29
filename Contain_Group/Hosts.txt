@@ -1,4 +1,0 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 60bdd09 (cleaned code and organized output)
