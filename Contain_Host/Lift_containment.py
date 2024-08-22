@@ -5,12 +5,18 @@ from falconpy import Hosts, RealTimeResponse, APIError
 from colorama import init, Fore, Back, Style
 import subprocess
 import sys
+from datetime import datetime
+
+def log_uncontainment_action(hostname, host_id, status):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Status: {status}\n"
+    with open("uncontainment_log.txt", "a") as log_file:
+        log_file.write(log_message)
 
 init()
 
 # Constants
 CONFIG_FILE = 'config.yaml'
-
 
 # Function to load configuration
 def load_config(file_path):
@@ -26,7 +32,6 @@ def load_config(file_path):
         print(f"Error reading configuration file: {e}")
         return None
 
-
 # Function to read hostnames from a text file
 def read_hostnames(file_path):
     if not os.path.isfile(file_path):
@@ -39,7 +44,6 @@ def read_hostnames(file_path):
     except Exception as e:
         print(f"Error reading '{file_path}': {e}")
         return []
-
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(config):
@@ -61,22 +65,16 @@ def test_crowdstrike_connection(config):
         response = falcon_hosts.query_devices_by_filter(limit=1)
         if response["status_code"] == 200:
             print(Fore.BLUE + "Successfully connected to the CrowdStrike API." + Style.RESET_ALL)
-            # Debug: Print the response from the API
-            # print(f"API Response: {json.dumps(response, indent=4)}")
         elif response["status_code"] == 401:
             print(Fore.RED + "Unauthorized: Please check your API credentials." + Style.RESET_ALL)
-            # Debug: Print more details for troubleshooting
-            # print(Fore.RED + f"Response details: {json.dumps(response, indent=4)}" + Style.RESET_ALL)
         else:
             print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" +
                   Style.RESET_ALL)
-            # Debug: Print more details for troubleshooting
             print(f"Response details: {json.dumps(response, indent=4)}")
     except APIError as e:
         print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
     except Exception as e:
         print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
-
 
 # Function to un-contain a host by its ID
 def uncontain_host_by_id(falcon_hosts, host_id):
@@ -88,7 +86,6 @@ def uncontain_host_by_id(falcon_hosts, host_id):
     except Exception as e:
         print(Fore.RED + f"Error un-containing host ID {host_id}: {e}" + Style.RESET_ALL)
         return None
-
 
 # Load the configuration
 config = load_config(CONFIG_FILE)
@@ -105,8 +102,6 @@ failed_to_uncontain_hosts = []
 if config and 'file_path' in config:
     hostnames = read_hostnames(config['file_path'])
     if hostnames:
-        # print(f"Read hostnames: {hostnames}")
-
         # Extract API credentials
         client_id = config['api']['client_id']
         client_secret = config['api']['client_secret']
@@ -127,35 +122,37 @@ if config and 'file_path' in config:
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
-                    # Pretty print the host details
-                    # print(f"Host details for {hostname} ({host_id}): {json.dumps(response, indent=4)}")
                     # Un-contain the host using its ID
                     uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
                     # Check the un-containment response
                     if uncontainment_response:
                         if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
                             successfully_uncontained_hosts.append(hostname)
-                            print(Fore.BLUE + "Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
+                            print(Fore.BLUE + f"Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
+                            log_uncontainment_action(hostname, host_id, "un-contained")
                         elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
                             pending_uncontained_hosts.append(hostname)
-                            # print(Fore.YELLOW + "Un-containment for {hostname} ({host_id}) is pending: {json.dumps"
-                            #                     "(uncontainment_response, indent=4)}" + Style.RESET_ALL)
+                            log_uncontainment_action(hostname, host_id, "pending")
                         else:
                             failed_to_uncontain_hosts.append(hostname)
                             print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
+                            log_uncontainment_action(hostname, host_id, "failed")
                     else:
                         failed_to_uncontain_hosts.append(hostname)
-                        print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment "
-                                         f"request" + Style.RESET_ALL)
+                        print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment request" + Style.RESET_ALL)
+                        log_uncontainment_action(hostname, host_id, "no response")
                 else:
                     print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_uncontain_hosts.append(hostname)
+                    log_uncontainment_action(hostname, "unknown", "no host found")
             except APIError as e:
                 print(Fore.RED + f"APIError querying host {hostname}: {e.message}"  + Style.RESET_ALL)
                 failed_to_uncontain_hosts.append(hostname)
+                log_uncontainment_action(hostname, "unknown", "APIError")
             except Exception as e:
                 print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
                 failed_to_uncontain_hosts.append(hostname)
+                log_uncontainment_action(hostname, "unknown", "error")
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
@@ -187,4 +184,3 @@ elif status.lower() == 'y':
     subprocess.call([venv_python, containment_script])
 else:
     print("Invalid input. Please enter Y or N.")
-

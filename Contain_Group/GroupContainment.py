@@ -5,6 +5,13 @@ from colorama import init, Fore, Style
 from LoadConfig import load_config # loads config.yaml
 import pandas as pd
 init()
+from datetime import datetime
+
+def log_containment_action(hostname, host_id, action, status):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Action: {action}, Status: {status}\n"
+    with open("group_containment_log.txt", "a") as log_file:
+        log_file.write(log_message)
 
 # Function to test the connection to the CrowdStrike API
 def test_crowdstrike_connection(client_id, client_secret):
@@ -107,14 +114,21 @@ def contain_hosts(hosts, client_id, client_secret):
         if containment_response:
             if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
                 successfully_contained_hosts.append(host_id)
-                print(Fore.BLUE + f"Successfully contained {host_id}" + Style.RESET_ALL)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "success")
+                print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
             elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
                 pending_contained_hosts.append(host_id)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "pending")
             else:
                 failed_to_contain_hosts.append(host_id)
-                print(Fore.RED + f"Failed to contain {host_id}: {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "failed")
+                print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
         else:
             failed_to_contain_hosts.append(host_id)
+            log_containment_action("Unknown", host_id, "contain", "no response")
             print(Fore.RED + f"Failed to contain {host_id}: No response from containment request" + Style.RESET_ALL)
 
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
@@ -132,17 +146,25 @@ def lift_containment(hosts, client_id, client_secret):
         if uncontainment_response:
             if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
                 successfully_uncontained_hosts.append(host_id)
-                print(Fore.BLUE + f"Successfully un-contained {host_id}" + Style.RESET_ALL)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "success")
+                print(Fore.BLUE + f"Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
             elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
                 pending_uncontained_hosts.append(host_id)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "pending")
             else:
                 failed_to_uncontain_hosts.append(host_id)
-                print(Fore.RED + f"Failed to un-contain {host_id}" + Style.RESET_ALL)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "failed")
+                print(Fore.RED + f"Failed to un-contain {hostname} ({host_id})" + Style.RESET_ALL)
         else:
             failed_to_uncontain_hosts.append(host_id)
+            log_containment_action("Unknown", host_id, "lift", "no response")
             print(Fore.RED + f"Failed to un-contain {host_id}: No response from un-containment request" + Style.RESET_ALL)
 
     print_summary(successfully_uncontained_hosts, pending_uncontained_hosts, failed_to_uncontain_hosts)
+
 
 
 # Function to print summary
