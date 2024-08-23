@@ -7,6 +7,7 @@ from colorama import init, Fore, Back, Style
 import subprocess
 import sys
 from datetime import datetime
+import time
 
 def log_containment_action(hostname, host_id, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -130,6 +131,8 @@ if config and 'file_path' in config:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     # Contain the host using its ID
                     containment_response = contain_host_by_id(falcon_hosts, host_id)
+                    time.sleep(60)
+
                     # Check the containment response
                     if containment_response:
                         if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):

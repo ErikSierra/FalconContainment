@@ -6,6 +6,7 @@ from LoadConfig import load_config # loads config.yaml
 import pandas as pd
 init()
 from datetime import datetime
+import time
 
 def log_containment_action(hostname, host_id, action, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -111,6 +112,8 @@ def contain_hosts(hosts, client_id, client_secret):
 
     for host_id in hosts:
         containment_response = contain_host_by_id(falcon_hosts, host_id)
+        time.sleep(60)
+
         if containment_response:
             if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
                 successfully_contained_hosts.append(host_id)
@@ -143,6 +146,8 @@ def lift_containment(hosts, client_id, client_secret):
 
     for host_id in hosts:
         uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
+        time.sleep(60)
+
         if uncontainment_response:
             if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
                 successfully_uncontained_hosts.append(host_id)

@@ -6,6 +6,7 @@ from colorama import init, Fore, Back, Style
 import subprocess
 import sys
 from datetime import datetime
+import time
 
 def log_uncontainment_action(hostname, host_id, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -124,6 +125,9 @@ if config and 'file_path' in config:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     # Un-contain the host using its ID
                     uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
+
+                    time.sleep(60)
+                    
                     # Check the un-containment response
                     if uncontainment_response:
                         if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
