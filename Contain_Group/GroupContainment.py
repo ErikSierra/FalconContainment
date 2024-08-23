@@ -102,19 +102,6 @@ def get_group_members(client_id, client_secret, group_id):
     else:
         print(f"Error: {response['body']['errors'][0]['message']}")
         return []
-    
-
-# Function to check containment status
-def containment_status(hosts, client_id, client_secret):
-    falcon = Hosts(client_id=client_id, client_secret=client_secret)
-    for host in hosts:
-        result = falcon.get_device_details(ids=host)
-        if result["status_code"] == 200:
-            state = result["body"]["resources"][0]["status"]
-            hostname = result["body"]["resources"][0]["hostname"]
-            print(f"Hostname: {hostname}, ID: {host} ==> Status: {state}")
-        else:
-            print(result["body"]["errors"])
 
 # Function to contain hosts
 def contain_hosts(hosts, client_id, client_secret):
@@ -124,24 +111,28 @@ def contain_hosts(hosts, client_id, client_secret):
     failed_to_contain_hosts = []
 
     for host_id in hosts:
-        contain_host_by_id(falcon_hosts, host_id)
+        containment_response = contain_host_by_id(falcon_hosts, host_id)
+        time.sleep(60)
 
-    time.sleep(60)
-
-    # Check the status post-delay
-    status_response = containment_status(hosts, client_id, client_secret)
-    for host_id, (hostname, status) in status_response.items():
-        if status.lower() == "contained":
-            successfully_contained_hosts.append(host_id)
-            print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
-            log_containment_action(hostname, host_id, "contain", "success")
-        elif status.lower() == "pending":
-            pending_contained_hosts.append(host_id)
-            log_containment_action(hostname, host_id, "contain", "pending")
+        if containment_response:
+            if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
+                successfully_contained_hosts.append(host_id)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "success")
+                print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
+            elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
+                pending_contained_hosts.append(host_id)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "pending")
+            else:
+                failed_to_contain_hosts.append(host_id)
+                hostname = containment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "contain", "failed")
+                print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
         else:
             failed_to_contain_hosts.append(host_id)
-            print(Fore.RED + f"Failed to contain {hostname} ({host_id})" + Style.RESET_ALL)
-            log_containment_action(hostname, host_id, "contain", "failed")
+            log_containment_action("Unknown", host_id, "contain", "no response")
+            print(Fore.RED + f"Failed to contain {host_id}: No response from containment request" + Style.RESET_ALL)
 
     print_summary(successfully_contained_hosts, pending_contained_hosts, failed_to_contain_hosts)
 
@@ -154,24 +145,28 @@ def lift_containment(hosts, client_id, client_secret):
     failed_to_uncontain_hosts = []
 
     for host_id in hosts:
-        uncontain_host_by_id(falcon_hosts, host_id)
+        uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
+        time.sleep(60)
 
-    time.sleep(60)
-
-    # Check the status post-delay
-    status_response = containment_status(hosts, client_id, client_secret)
-    for host_id, (hostname, status) in status_response.items():
-        if status.lower() == "contained":
-            successfully_uncontained_hosts.append(host_id)
-            print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
-            log_containment_action(hostname, host_id, "contain", "success")
-        elif status.lower() == "pending":
-            pending_uncontained_hosts.append(host_id)
-            log_containment_action(hostname, host_id, "contain", "pending")
+        if uncontainment_response:
+            if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
+                successfully_uncontained_hosts.append(host_id)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "success")
+                print(Fore.BLUE + f"Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
+            elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
+                pending_uncontained_hosts.append(host_id)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "pending")
+            else:
+                failed_to_uncontain_hosts.append(host_id)
+                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
+                log_containment_action(hostname, host_id, "lift", "failed")
+                print(Fore.RED + f"Failed to un-contain {hostname} ({host_id})" + Style.RESET_ALL)
         else:
             failed_to_uncontain_hosts.append(host_id)
-            print(Fore.RED + f"Failed to contain {hostname} ({host_id})" + Style.RESET_ALL)
-            log_containment_action(hostname, host_id, "contain", "failed")
+            log_containment_action("Unknown", host_id, "lift", "no response")
+            print(Fore.RED + f"Failed to un-contain {host_id}: No response from un-containment request" + Style.RESET_ALL)
 
     print_summary(successfully_uncontained_hosts, pending_uncontained_hosts, failed_to_uncontain_hosts)
 
@@ -192,6 +187,18 @@ def print_summary(successfully_contained_hosts, pending_contained_hosts, failed_
     for host in failed_to_contain_hosts:
         print(Fore.RED + f"- {host}" + Style.RESET_ALL)
 
+
+# Function to check containment status
+def containment_status(hosts, client_id, client_secret):
+    falcon = Hosts(client_id=client_id, client_secret=client_secret)
+    for host in hosts:
+        result = falcon.get_device_details(ids=host)
+        if result["status_code"] == 200:
+            state = result["body"]["resources"][0]["status"]
+            hostname = result["body"]["resources"][0]["hostname"]
+            print(f"Hostname: {hostname}, ID: {host} ==> Status: {state}")
+        else:
+            print(result["body"]["errors"])
 
 
 def main():
