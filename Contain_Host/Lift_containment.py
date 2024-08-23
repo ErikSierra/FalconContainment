@@ -11,7 +11,7 @@ import time
 def log_uncontainment_action(hostname, host_id, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Status: {status}\n"
-    with open("uncontainment_log.txt", "a") as log_file:
+    with open("containment_lifted_log.txt", "a") as log_file:
         log_file.write(log_message)
 
 init()

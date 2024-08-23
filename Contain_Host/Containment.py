@@ -138,30 +138,23 @@ if config and 'file_path' in config:
                         if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
                             successfully_contained_hosts.append(hostname)
                             print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
-                            log_containment_action(hostname, host_id, "contained")
                         elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
                             pending_contained_hosts.append(hostname)
-                            log_containment_action(hostname, host_id, "pending")
                         else:
                             failed_to_contain_hosts.append(hostname)
                             print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
-                            log_containment_action(hostname, host_id, "failed")
                     else:
                         failed_to_contain_hosts.append(hostname)
                         print(Fore.RED + f"Failed to contain {hostname} ({host_id}): No response from containment request" + Style.RESET_ALL)
-                        log_containment_action(hostname, host_id, "no response")
                 else:
                     print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
                     failed_to_contain_hosts.append(hostname)
-                    log_containment_action(hostname, "unknown", "no host found")
             except APIError as e:
                 print(Fore.RED + f"APIError querying host {hostname}: {e.message}" + Style.RESET_ALL)
                 failed_to_contain_hosts.append(hostname)
-                log_containment_action(hostname, "unknown", "APIError")
             except Exception as e:
                 print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
                 failed_to_contain_hosts.append(hostname)
-                log_containment_action(hostname, "unknown", "error")
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
