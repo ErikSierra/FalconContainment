@@ -10,7 +10,7 @@ import time
 
 def log_containment_action(hostname, host_id, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Action: {action}, Status: {status}\n"
+    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Status: {status}\n"
     with open("group_containment_log.txt", "a") as log_file:
         log_file.write(log_message)
 
