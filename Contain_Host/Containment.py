@@ -124,19 +124,19 @@ if config and 'file_path' in config:
         for i in range(len(successfully_contained_hosts)):
             name, id = successfully_contained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "contain", "contained")
+            log_containment_action(name, id, "contained")
     
         print("Pending containment: \n")
         for i in range(len(pending_contained_hosts)):
             name, id = pending_contained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "contain", "pending")
+            log_containment_action(name, id, "pending")
 
         print("Failed containment: \n")
         for i in range(len(failed_to_contain_hosts)):
             name, id = failed_to_contain_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "contain", "normal")
+            log_containment_action(name, id, "normal")
 
 
     else:

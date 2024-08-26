@@ -155,19 +155,19 @@ if config and 'file_path' in config:
         for i in range(len(successfully_uncontained_hosts)):
             name, id = successfully_uncontained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "lift", "normal")
+            log_containment_action(name, id, "normal")
     
         print("Pending uncontainment: \n")
         for i in range(len(pending_uncontained_hosts)):
             name, id = pending_uncontained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "lift", "pending")
+            log_containment_action(name, id, "pending")
 
         print("Failed uncontainment: \n")
         for i in range(len(failed_to_uncontain_hosts)):
             name, id = failed_to_uncontain_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(name, id, "lift", "contained")
+            log_containment_action(name, id, "contained")
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
