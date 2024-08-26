@@ -71,8 +71,6 @@ failed_to_contain_hosts = []
 if config and 'file_path' in config:
     hostids = read_hostnames(config['file_path'])
     if hostids:
-        print(f"Read hostnames: {hostids}")
-
         # Extract API credentials
         client_id = config['api']['client_id']
         client_secret = config['api']['client_secret']
@@ -111,11 +109,14 @@ if config and 'file_path' in config:
                 status = result["body"]["resources"][0]["status"]
                 hostname = result["body"]["resources"][0]["hostname"]
                 if status == "contained":
-                    successfully_contained_hosts.append(hostname, host_id)
+                    successfully_contained_hosts.append(hostname)
+                    successfully_contained_hosts.append(hostid)
                 elif status == "normal":
-                    failed_to_contain_hosts.append(hostname, host_id)
+                    failed_to_contain_hosts.append(hostname)
+                    failed_to_contain_hosts.append(host_id)
                 else:
-                    pending_contained_hosts.append(hostname, host_id)
+                    pending_contained_hosts.append(hostname)
+                    pending_contained_hosts.append(host_id)
             else:
                 print(result["body"]["errors"])
 

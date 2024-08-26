@@ -116,11 +116,14 @@ def contain_hosts(hosts, client_id, client_secret):
             status = result["body"]["resources"][0]["status"]
             hostname = result["body"]["resources"][0]["hostname"]
             if status == "contained":
-                successfully_contained_hosts.append(hostname, host_id)
+                successfully_contained_hosts.append(hostname)
+                successfully_contained_hosts.append(host_id)
             elif status == "normal":
-                failed_to_contain_hosts.append(hostname, host_id)
+                failed_to_contain_hosts.append(hostname)
+                failed_to_contain_hosts.append(host_id)
             else:
-                pending_contained_hosts.append(hostname, host_id)
+                pending_contained_hosts.append(hostname)
+                pending_contained_hosts.append(host_id)
         else:
             print(result["body"]["errors"])
 
@@ -158,11 +161,14 @@ def lift_containment(hosts, client_id, client_secret):
             status = result["body"]["resources"][0]["status"]
             hostname = result["body"]["resources"][0]["hostname"]
             if status == "contained":
-                failed_to_uncontain_hosts.append(hostname, host_id)
+                failed_to_uncontain_hosts.append(hostname)
+                failed_to_uncontain_hosts.append(host_id)
             elif status == "normal":
-                successfully_uncontained_hosts.append(hostname, host_id)
+                successfully_uncontained_hosts.append(hostname)
+                successfully_uncontained_hosts.append(host_id)
             else:
-                pending_uncontained_hosts.append(hostname, host_id)
+                pending_uncontained_hosts.append(hostname)
+                pending_uncontained_hosts.append(host_id)
         else:
             print(result["body"]["errors"])
 

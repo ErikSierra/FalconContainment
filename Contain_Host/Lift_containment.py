@@ -122,11 +122,16 @@ if config and 'file_path' in config:
                 response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostid}'")
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
+                    host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     uncontain_host_by_id(falcon_hosts, hostid)
+                else:
+                    print(Fore.RED + f"No host found for hostname: {hostid}" + Style.RESET_ALL)
             except APIError as e:
                 print(Fore.RED + f"APIError querying host {hostid}: {e.message}"  + Style.RESET_ALL)
             except Exception as e:
                 print(Fore.RED + f"Error querying host {hostid}: {e}" + Style.RESET_ALL)
+
+        time.sleep(60)
         
         for host_id in hostids:
             result = falcon_hosts.get_device_details(ids=host_id)
@@ -135,11 +140,14 @@ if config and 'file_path' in config:
                 status = result["body"]["resources"][0]["status"]
                 hostname = result["body"]["resources"][0]["hostname"]
                 if status == "contained":
-                    failed_to_uncontain_hosts.append(hostname, host_id)
+                    failed_to_uncontain_hosts.append(hostname)
+                    failed_to_uncontain_hosts.append(host_id)
                 elif status == "normal":
-                    successfully_uncontained_hosts.append(hostname, host_id)
+                    successfully_uncontained_hosts.append(hostname)
+                    successfully_uncontained_hosts.append(host_id)
                 else:
-                    pending_uncontained_hosts.append(hostname, host_id)
+                    pending_uncontained_hosts.append(hostname)
+                    pending_uncontained_hosts.append(host_id)
             else:
                 print(result["body"]["errors"])
 
