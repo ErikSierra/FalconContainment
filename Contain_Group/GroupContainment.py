@@ -107,7 +107,7 @@ def contain_hosts(hosts, client_id, client_secret):
     for host_id in hosts:
         contain_host_by_id(falcon_hosts, host_id)
 
-    time.delay(60)
+    time.sleep(60)
 
     for host_id in hosts:
         result = falcon_hosts.get_device_details(ids=host_id)
@@ -154,6 +154,7 @@ def lift_containment(hosts, client_id, client_secret):
     for host_id in hosts:
         uncontain_host_by_id(falcon_hosts, host_id)
 
+    time.sleep(60)
     for host_id in hosts:
         result = falcon_hosts.get_device_details(ids=host_id)
 
