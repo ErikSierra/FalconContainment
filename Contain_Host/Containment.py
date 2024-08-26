@@ -112,31 +112,31 @@ if config and 'file_path' in config:
                 status = result["body"]["resources"][0]["status"]
                 hostname = result["body"]["resources"][0]["hostname"]
                 if status == "contained":
-                    successfully_contained_hosts.append(hostname)
-                    successfully_contained_hosts.append(hostid)
+                    successfully_contained_hosts.append([hostname, host_id])
                 elif status == "normal":
-                    failed_to_contain_hosts.append(hostname)
-                    failed_to_contain_hosts.append(host_id)
+                    failed_to_contain_hosts.append([hostname, host_id])
                 else:
-                    pending_contained_hosts.append(hostname)
-                    pending_contained_hosts.append(host_id)
+                    pending_contained_hosts.append([hostname, host_id])
             else:
                 print(result["body"]["errors"])
 
         print("SuccessFully Contained: \n")
-        for name, id in successfully_contained_hosts:
+        for i in range(len(successfully_contained_hosts)):
+            name, id = successfully_contained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "contain", "contained")
+            log_containment_action(name, id, "contain", "contained")
     
         print("Pending containment: \n")
-        for name, id in pending_contained_hosts:
+        for i in range(len(pending_contained_hosts)):
+            name, id = pending_contained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "contain", "pending")
+            log_containment_action(name, id, "contain", "pending")
 
         print("Failed containment: \n")
-        for name, id in failed_to_contain_hosts:
+        for i in range(len(failed_to_contain_hosts)):
+            name, id = failed_to_contain_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "contain", "normal")
+            log_containment_action(name, id, "contain", "normal")
 
 
     else:

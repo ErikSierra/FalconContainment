@@ -143,31 +143,31 @@ if config and 'file_path' in config:
                 status = result["body"]["resources"][0]["status"]
                 hostname = result["body"]["resources"][0]["hostname"]
                 if status == "contained":
-                    failed_to_uncontain_hosts.append(hostname)
-                    failed_to_uncontain_hosts.append(hostid)
+                    failed_to_uncontain_hosts.append([hostname, host_id])
                 elif status == "normal":
-                    successfully_uncontained_hosts.append(hostname)
-                    successfully_uncontained_hosts.append(hostid)
+                    successfully_uncontained_hosts.append([hostname, host_id])
                 else:
-                    pending_uncontained_hosts.append(hostname)
-                    pending_uncontained_hosts.append(hostid)
+                    pending_uncontained_hosts.append([hostname, host_id])
             else:
                 print(result["body"]["errors"])
 
         print("SuccessFully lifted: \n")
-        for name, id in successfully_uncontained_hosts:
+        for i in range(len(successfully_uncontained_hosts)):
+            name, id = successfully_uncontained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "lift", "normal")
+            log_containment_action(name, id, "lift", "normal")
     
         print("Pending uncontainment: \n")
-        for name, id in pending_uncontained_hosts:
+        for i in range(len(pending_uncontained_hosts)):
+            name, id = pending_uncontained_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "lift", "pending")
+            log_containment_action(name, id, "lift", "pending")
 
         print("Failed uncontainment: \n")
-        for name, id in failed_to_uncontain_hosts:
+        for i in range(len(failed_to_uncontain_hosts)):
+            name, id = failed_to_uncontain_hosts[i]
             print("Host name: ", name, " Host id: ", id)
-            log_containment_action(hostname, host_id, "lift", "contained")
+            log_containment_action(name, id, "lift", "contained")
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
