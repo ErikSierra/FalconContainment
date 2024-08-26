@@ -8,9 +8,9 @@ init()
 from datetime import datetime
 import time
 
-def log_containment_action(hostname, host_id, status):
+def log_containment_action(hostname, host_id, action, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Status: {status}\n"
+    log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Action: {action}, Status: {status}\n"
     with open("group_containment_log.txt", "a") as log_file:
         log_file.write(log_message)
 
@@ -128,19 +128,19 @@ def contain_hosts(hosts, client_id, client_secret):
     for i in range(len(successfully_contained_hosts)):
         name, id = successfully_contained_hosts[i]
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "contained")
+        log_containment_action(name, id, "contian", "contained")
  
     print("Pending containment: \n")
     for i in range(len(pending_contained_hosts)):
         name, id = pending_contained_hosts[i]
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "pending")
+        log_containment_action(name, id, "contian", "pending")
 
     print("Failed containment: \n")
     for i in range(len(failed_to_contain_hosts)):
         name, id = failed_to_contain_hosts[i]        
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "normal")
+        log_containment_action(name, id, "contian", "normal")
          
 
 
@@ -174,19 +174,19 @@ def lift_containment(hosts, client_id, client_secret):
     for i in range(len(successfully_uncontained_hosts)):
         name, id = successfully_uncontained_hosts[i]
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "normal")
+        log_containment_action(name, id, "lift", "normal")
  
     print("Pending uncontainment: \n")
     for i in range(len(pending_uncontained_hosts)):
         name, id = pending_uncontained_hosts[i]
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "pending")
+        log_containment_action(name, id, "lift", "pending")
 
     print("Failed uncontainment: \n")
     for i in range(len(failed_to_uncontain_hosts)):
         name, id = failed_to_uncontain_hosts[i]
         print("Host name: ", name, " Host id: ", id)
-        log_containment_action(name, id, "contained")
+        log_containment_action(name, id, "lift", "contained")
 
 
 

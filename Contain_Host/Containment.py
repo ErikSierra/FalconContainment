@@ -138,7 +138,6 @@ if config and 'file_path' in config:
             print("Host name: ", name, " Host id: ", id)
             log_containment_action(name, id, "normal")
 
-
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
