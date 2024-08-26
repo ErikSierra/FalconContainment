@@ -103,6 +103,9 @@ if config and 'file_path' in config:
         time.sleep(60)
 
         for hostid in hostids:
+            # Query the API for host information based on the hostname
+            response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostid}'")
+            host_id = response["body"]["resources"][0] 
             result = falcon_hosts.get_device_details(ids=host_id)
 
             if result["status_code"] == 200:

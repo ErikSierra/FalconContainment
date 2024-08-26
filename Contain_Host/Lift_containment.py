@@ -133,7 +133,10 @@ if config and 'file_path' in config:
 
         time.sleep(60)
 
-        for host_id in hostids:
+        for hostid in hostids:
+            # Query the API for host information based on the hostname
+            response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostid}'")
+            host_id = response["body"]["resources"][0] 
             result = falcon_hosts.get_device_details(ids=host_id)
 
             if result["status_code"] == 200:
@@ -141,13 +144,13 @@ if config and 'file_path' in config:
                 hostname = result["body"]["resources"][0]["hostname"]
                 if status == "contained":
                     failed_to_uncontain_hosts.append(hostname)
-                    failed_to_uncontain_hosts.append(host_id)
+                    failed_to_uncontain_hosts.append(hostid)
                 elif status == "normal":
                     successfully_uncontained_hosts.append(hostname)
-                    successfully_uncontained_hosts.append(host_id)
+                    successfully_uncontained_hosts.append(hostid)
                 else:
                     pending_uncontained_hosts.append(hostname)
-                    pending_uncontained_hosts.append(host_id)
+                    pending_uncontained_hosts.append(hostid)
             else:
                 print(result["body"]["errors"])
 
