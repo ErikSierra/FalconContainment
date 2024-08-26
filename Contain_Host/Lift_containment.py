@@ -123,7 +123,7 @@ if config and 'file_path' in config:
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
-                    uncontain_host_by_id(falcon_hosts, hostid)
+                    uncontain_host_by_id(falcon_hosts, host_id)
                 else:
                     print(Fore.RED + f"No host found for hostname: {hostid}" + Style.RESET_ALL)
             except APIError as e:
@@ -132,7 +132,7 @@ if config and 'file_path' in config:
                 print(Fore.RED + f"Error querying host {hostid}: {e}" + Style.RESET_ALL)
 
         time.sleep(60)
-        
+
         for host_id in hostids:
             result = falcon_hosts.get_device_details(ids=host_id)
 
