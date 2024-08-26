@@ -149,28 +149,37 @@ def lift_containment(hosts, client_id, client_secret):
     failed_to_uncontain_hosts = []
 
     for host_id in hosts:
-        uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
-        time.sleep(60)
+        uncontain_host_by_id(falcon_hosts, host_id)
 
-        if uncontainment_response:
-            if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
-                successfully_uncontained_hosts.append(host_id)
-                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
-                log_containment_action(hostname, host_id, "lift", "success")
-                print(Fore.BLUE + f"Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
-            elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
-                pending_uncontained_hosts.append(host_id)
-                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
-                log_containment_action(hostname, host_id, "lift", "pending")
+    for host_id in hosts:
+        result = falcon_hosts.get_device_details(ids=host_id)
+
+        if result["status_code"] == 200:
+            status = result["body"]["resources"][0]["status"]
+            hostname = result["body"]["resources"][0]["hostname"]
+            if status == "contained":
+                failed_to_uncontain_hosts.append(hostname, host_id)
+            elif status == "normal":
+                successfully_uncontained_hosts.append(hostname, host_id)
             else:
-                failed_to_uncontain_hosts.append(host_id)
-                hostname = uncontainment_response["body"]["resources"][0]["hostname"]
-                log_containment_action(hostname, host_id, "lift", "failed")
-                print(Fore.RED + f"Failed to un-contain {hostname} ({host_id})" + Style.RESET_ALL)
+                pending_uncontained_hosts.append(hostname, host_id)
         else:
-            failed_to_uncontain_hosts.append(host_id)
-            log_containment_action("Unknown", host_id, "lift", "no response")
-            print(Fore.RED + f"Failed to un-contain {host_id}: No response from un-containment request" + Style.RESET_ALL)
+            print(result["body"]["errors"])
+
+    print("SuccessFully lifted: \n")
+    for name, id in successfully_uncontained_hosts:
+        print("Host name: ", name, " Host id: ", id)
+        log_containment_action(hostname, host_id, "lift", "normal")
+ 
+    print("Pending uncontainment: \n")
+    for name, id in pending_uncontained_hosts:
+        print("Host name: ", name, " Host id: ", id)
+        log_containment_action(hostname, host_id, "lift", "pending")
+
+    print("Failed uncontainment: \n")
+    for name, id in failed_to_uncontain_hosts:
+        print("Host name: ", name, " Host id: ", id)
+        log_containment_action(hostname, host_id, "lift", "contained")
 
 
 

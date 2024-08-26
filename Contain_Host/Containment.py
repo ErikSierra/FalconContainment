@@ -47,39 +47,6 @@ def read_hostnames(file_path):
         print(f"Error reading '{file_path}': {e}")
         sys.exit(1)
 
-# Function to test the connection to the CrowdStrike API
-def test_crowdstrike_connection(config):
-    if not config:
-        return
-
-    try:
-        # API credentials
-        client_id = config['api']['client_id']
-        client_secret = config['api']['client_secret']
-    except KeyError as e:
-        print(f"Missing API credential in configuration file: {e}")
-        sys.exit(1)
-
-    # Connect to the CrowdStrike API
-    try:
-        falcon_hosts = Hosts(client_id=client_id, client_secret=client_secret)
-        # Perform a simple request to verify the connection
-        response = falcon_hosts.query_devices_by_filter(limit=1)
-        if response["status_code"] == 200:
-            print(Fore.BLUE + "Successfully connected to the CrowdStrike API." + Style.RESET_ALL)
-        elif response["status_code"] == 401:
-            print(Fore.RED + "Unauthorized: Please check your API credentials in the .yaml file." + Style.RESET_ALL)
-            sys.exit(1)
-        else:
-            print(Fore.RED + f"Failed to connect to the CrowdStrike API. Status code: {response['status_code']}" +
-                  Style.RESET_ALL)
-            sys.exit(1)
-    except APIError as e:
-        print(Fore.RED + f"APIError during authentication: {e.message}" + Style.RESET_ALL)
-        sys.exit(1)
-    except Exception as e:
-        print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
-        sys.exit(1)
 
 # Function to contain a host by its ID
 def contain_host_by_id(falcon_hosts, host_id):
@@ -95,9 +62,6 @@ def contain_host_by_id(falcon_hosts, host_id):
 # Load the configuration
 config = load_config(CONFIG_FILE)
 
-# Test the connection to the CrowdStrike API
-test_crowdstrike_connection(config)
-
 # Initialize success and failure lists
 successfully_contained_hosts = []
 pending_contained_hosts = []
@@ -105,9 +69,9 @@ failed_to_contain_hosts = []
 
 # If the configuration is loaded and contains the file path, read the hostnames (lots of conditionals)
 if config and 'file_path' in config:
-    hostnames = read_hostnames(config['file_path'])
-    if hostnames:
-        print(f"Read hostnames: {hostnames}")
+    hostids = read_hostnames(config['file_path'])
+    if hostids:
+        print(f"Read hostnames: {hostids}")
 
         # Extract API credentials
         client_id = config['api']['client_id']
@@ -122,68 +86,90 @@ if config and 'file_path' in config:
             print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
 
         # Inside your loop where you process each hostname
-        for hostname in hostnames:
+        for hostid in hostids:
             try:
                 # Query the API for host information based on the hostname
-                response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostname}'")
+                response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostid}'")
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
                     host_id = response["body"]["resources"][0]  # Get the host ID from the response
                     # Contain the host using its ID
-                    containment_response = contain_host_by_id(falcon_hosts, host_id)
-                    time.sleep(60)
-
-                    # Check the containment response
-                    if containment_response:
-                        if containment_response["status_code"] == 200 and not containment_response["body"].get("errors"):
-                            successfully_contained_hosts.append(hostname)
-                            print(Fore.BLUE + f"Successfully contained {hostname} ({host_id})" + Style.RESET_ALL)
-                        elif containment_response["status_code"] == 202 and not containment_response["body"].get("errors"):
-                            pending_contained_hosts.append(hostname)
-                        else:
-                            failed_to_contain_hosts.append(hostname)
-                            print(Fore.RED + f"Failed to contain {hostname} ({host_id}): {json.dumps(containment_response, indent=4)}" + Style.RESET_ALL)
-                    else:
-                        failed_to_contain_hosts.append(hostname)
-                        print(Fore.RED + f"Failed to contain {hostname} ({host_id}): No response from containment request" + Style.RESET_ALL)
+                    contain_host_by_id(falcon_hosts, host_id)
                 else:
-                    print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
-                    failed_to_contain_hosts.append(hostname)
+                    print(Fore.RED + f"No host found for hostname: {hostid}" + Style.RESET_ALL)
             except APIError as e:
-                print(Fore.RED + f"APIError querying host {hostname}: {e.message}" + Style.RESET_ALL)
-                failed_to_contain_hosts.append(hostname)
+                print(Fore.RED + f"APIError querying host {hostid}: {e.message}" + Style.RESET_ALL)
             except Exception as e:
-                print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
-                failed_to_contain_hosts.append(hostname)
+                print(Fore.RED + f"Error querying host {hostid}: {e}" + Style.RESET_ALL)
+
+        time.sleep(60)
+
+        for hostid in hostids:
+            result = falcon_hosts.get_device_details(ids=host_id)
+
+            if result["status_code"] == 200:
+                status = result["body"]["resources"][0]["status"]
+                hostname = result["body"]["resources"][0]["hostname"]
+                if status == "contained":
+                    successfully_contained_hosts.append(hostname, host_id)
+                elif status == "normal":
+                    failed_to_contain_hosts.append(hostname, host_id)
+                else:
+                    pending_contained_hosts.append(hostname, host_id)
+            else:
+                print(result["body"]["errors"])
+
+        print("SuccessFully Contained: \n")
+        for name, id in successfully_contained_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "contain", "contained")
+    
+        print("Pending containment: \n")
+        for name, id in pending_contained_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "contain", "pending")
+
+        print("Failed containment: \n")
+        for name, id in failed_to_contain_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "contain", "normal")
+
+
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
     print("File path for hostnames not specified in the configuration file.")
 
-# Print summary
-print("\n============================================================================================================"
-      "=============================")
-print(Fore.BLUE + "Successfully contained hosts:" + Style.RESET_ALL)
-for host in successfully_contained_hosts:
-    print(Fore.BLUE + f"- {host}" + Style.RESET_ALL)
 
-print(Fore.YELLOW + "\nPending containment hosts:" + Style.RESET_ALL)
-for host in pending_contained_hosts:
-    print(Fore.YELLOW + f"- {host}" + Style.RESET_ALL)
 
-print(Fore.RED + "\nFailed to contain hosts:" + Style.RESET_ALL)
-for host in failed_to_contain_hosts:
-    print(Fore.RED + f"- {host}" + Style.RESET_ALL)
 
-status = input("===============================================================================\n"
-               "Do you want to re-check the status of containment for these hosts? (Y/N) ")
-if status.lower() == 'n':
-    print("Exiting the script...")
-    exit()
-elif status.lower() == 'y':
-    print("Running ContainmentStatus.py and checking status of hosts.")
-    venv_python = sys.executable
-    containment_script = "ContainmentStatus.py"
-    subprocess.call([venv_python, containment_script])
-else:
-    print("Invalid input. Please enter Y or N.")
+
+
+
+# # Print summary
+# print("\n============================================================================================================"
+#       "=============================")
+# print(Fore.BLUE + "Successfully contained hosts:" + Style.RESET_ALL)
+# for host in successfully_contained_hosts:
+#     print(Fore.BLUE + f"- {host}" + Style.RESET_ALL)
+
+# print(Fore.YELLOW + "\nPending containment hosts:" + Style.RESET_ALL)
+# for host in pending_contained_hosts:
+#     print(Fore.YELLOW + f"- {host}" + Style.RESET_ALL)
+
+# print(Fore.RED + "\nFailed to contain hosts:" + Style.RESET_ALL)
+# for host in failed_to_contain_hosts:
+#     print(Fore.RED + f"- {host}" + Style.RESET_ALL)
+
+# status = input("===============================================================================\n"
+#                "Do you want to re-check the status of containment for these hosts? (Y/N) ")
+# if status.lower() == 'n':
+#     print("Exiting the script...")
+#     exit()
+# elif status.lower() == 'y':
+#     print("Running ContainmentStatus.py and checking status of hosts.")
+#     venv_python = sys.executable
+#     containment_script = "ContainmentStatus.py"
+#     subprocess.call([venv_python, containment_script])
+# else:
+#     print("Invalid input. Please enter Y or N.")

@@ -8,7 +8,7 @@ import sys
 from datetime import datetime
 import time
 
-def log_uncontainment_action(hostname, host_id, status):
+def log_containment_action(hostname, host_id, status):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_message = f"{timestamp} - Hostname: {hostname}, Host ID: {host_id}, Status: {status}\n"
     with open("containment_lifted_log.txt", "a") as log_file:
@@ -101,8 +101,8 @@ failed_to_uncontain_hosts = []
 
 # If the configuration is loaded and contains the file path, read the hostnames (lots of conditionals)
 if config and 'file_path' in config:
-    hostnames = read_hostnames(config['file_path'])
-    if hostnames:
+    hostids = read_hostnames(config['file_path'])
+    if hostids:
         # Extract API credentials
         client_id = config['api']['client_id']
         client_secret = config['api']['client_secret']
@@ -116,75 +116,85 @@ if config and 'file_path' in config:
             print(Fore.RED + f"Error during API connection: {e}" + Style.RESET_ALL)
 
         # Process each hostname
-        for hostname in hostnames:
+        for hostid in hostids:
             try:
                 # Query the API for host information based on the hostname
-                response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostname}'")
+                response = falcon_hosts.query_devices_by_filter(filter=f"hostname:'{hostid}'")
                 # Check if the response contains host details
                 if response["status_code"] == 200 and "resources" in response["body"] and response["body"]["resources"]:
-                    host_id = response["body"]["resources"][0]  # Get the host ID from the response
-                    # Un-contain the host using its ID
-                    uncontainment_response = uncontain_host_by_id(falcon_hosts, host_id)
-
-                    time.sleep(60)
-                    
-                    # Check the un-containment response
-                    if uncontainment_response:
-                        if uncontainment_response["status_code"] == 200 and not uncontainment_response["body"].get("errors"):
-                            successfully_uncontained_hosts.append(hostname)
-                            print(Fore.BLUE + f"Successfully un-contained {hostname} ({host_id})" + Style.RESET_ALL)
-                            log_uncontainment_action(hostname, host_id, "un-contained")
-                        elif uncontainment_response["status_code"] == 202 and not uncontainment_response["body"].get("errors"):
-                            pending_uncontained_hosts.append(hostname)
-                            log_uncontainment_action(hostname, host_id, "pending")
-                        else:
-                            failed_to_uncontain_hosts.append(hostname)
-                            print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): {json.dumps(uncontainment_response, indent=4)}" + Style.RESET_ALL)
-                            log_uncontainment_action(hostname, host_id, "failed")
-                    else:
-                        failed_to_uncontain_hosts.append(hostname)
-                        print(Fore.RED + f"Failed to un-contain {hostname} ({host_id}): No response from un-containment request" + Style.RESET_ALL)
-                        log_uncontainment_action(hostname, host_id, "no response")
-                else:
-                    print(Fore.RED + f"No host found for hostname: {hostname}" + Style.RESET_ALL)
-                    failed_to_uncontain_hosts.append(hostname)
-                    log_uncontainment_action(hostname, "unknown", "no host found")
+                    uncontain_host_by_id(falcon_hosts, hostid)
             except APIError as e:
-                print(Fore.RED + f"APIError querying host {hostname}: {e.message}"  + Style.RESET_ALL)
-                failed_to_uncontain_hosts.append(hostname)
-                log_uncontainment_action(hostname, "unknown", "APIError")
+                print(Fore.RED + f"APIError querying host {hostid}: {e.message}"  + Style.RESET_ALL)
             except Exception as e:
-                print(Fore.RED + f"Error querying host {hostname}: {e}" + Style.RESET_ALL)
-                failed_to_uncontain_hosts.append(hostname)
-                log_uncontainment_action(hostname, "unknown", "error")
+                print(Fore.RED + f"Error querying host {hostid}: {e}" + Style.RESET_ALL)
+        
+        for host_id in hostids:
+            result = falcon_hosts.get_device_details(ids=host_id)
+
+            if result["status_code"] == 200:
+                status = result["body"]["resources"][0]["status"]
+                hostname = result["body"]["resources"][0]["hostname"]
+                if status == "contained":
+                    failed_to_uncontain_hosts.append(hostname, host_id)
+                elif status == "normal":
+                    successfully_uncontained_hosts.append(hostname, host_id)
+                else:
+                    pending_uncontained_hosts.append(hostname, host_id)
+            else:
+                print(result["body"]["errors"])
+
+        print("SuccessFully lifted: \n")
+        for name, id in successfully_uncontained_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "lift", "normal")
+    
+        print("Pending uncontainment: \n")
+        for name, id in pending_uncontained_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "lift", "pending")
+
+        print("Failed uncontainment: \n")
+        for name, id in failed_to_uncontain_hosts:
+            print("Host name: ", name, " Host id: ", id)
+            log_containment_action(hostname, host_id, "lift", "contained")
     else:
         print(Fore.RED + "No hostnames found in the specified file.")
 else:
     print("File path for hostnames not specified in the configuration file.")
 
-# Print summary
-print("\n============================================================================================================"
-      "============================")
-print(Fore.BLUE + "The following hosts have had their containments lifted:" + Style.RESET_ALL)
-for host in successfully_uncontained_hosts:
-    print(f"- {host}")
 
-print(Fore.YELLOW + "\nThe following hosts are still pending containment lift:" + Style.RESET_ALL)
-for host in pending_uncontained_hosts:
-    print(f"- {host}")
 
-print(Fore.RED + "\nThe containment lift operation failed for the following hosts:" + Style.RESET_ALL)
-for host in failed_to_uncontain_hosts:
-    print(f"- {host}")
 
-status = input("Do you want to re-check the status of containment for these hosts? (Y/N) ")
-if status.lower() == 'n':
-    print("Exiting the script...")
-    exit()
-elif status.lower() == 'y':
-    print("Running ContainmentStatus.py and checking status of hosts.")
-    venv_python = sys.executable
-    containment_script = "ContainmentStatus.py"
-    subprocess.call([venv_python, containment_script])
-else:
-    print("Invalid input. Please enter Y or N.")
+
+
+
+
+
+
+
+# # Print summary
+# print("\n============================================================================================================"
+#       "============================")
+# print(Fore.BLUE + "The following hosts have had their containments lifted:" + Style.RESET_ALL)
+# for host in successfully_uncontained_hosts:
+#     print(f"- {host}")
+
+# print(Fore.YELLOW + "\nThe following hosts are still pending containment lift:" + Style.RESET_ALL)
+# for host in pending_uncontained_hosts:
+#     print(f"- {host}")
+
+# print(Fore.RED + "\nThe containment lift operation failed for the following hosts:" + Style.RESET_ALL)
+# for host in failed_to_uncontain_hosts:
+#     print(f"- {host}")
+
+# status = input("Do you want to re-check the status of containment for these hosts? (Y/N) ")
+# if status.lower() == 'n':
+#     print("Exiting the script...")
+#     exit()
+# elif status.lower() == 'y':
+#     print("Running ContainmentStatus.py and checking status of hosts.")
+#     venv_python = sys.executable
+#     containment_script = "ContainmentStatus.py"
+#     subprocess.call([venv_python, containment_script])
+# else:
+#     print("Invalid input. Please enter Y or N.")
