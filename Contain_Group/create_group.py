@@ -5,13 +5,14 @@ token = getToken()
 
 url = "https://api.crowdstrike.com/devices/entities/host-groups/v1"
 
-assignment_rule = '{"AND":[{"operator":"contains","value":"DHC","field":"hostname"}]}'
+# assignment_rule = '{"AND":[{"operator":"contains","value":"DHC","field":"hostname"}]}'
+assignment_rule = '{"AND":[{"operator":"wildcard", "value":"*DHC*", "field_name":"hostname"}]}'
 
 payload = {
     "resources": [
         {
             "name": "Containment Script Exclusion",
-            "description": "includes all servers to prevent from containing",
+            "description": "Prevents DHCP servers from containing",
             "group_type": "dynamic",
             "assignment_rule": assignment_rule
         }
