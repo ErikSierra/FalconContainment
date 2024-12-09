@@ -1,12 +1,12 @@
 import requests
 from GetToken import getToken
-    
+
 token = getToken()
 
+# API URL
 url = "https://api.crowdstrike.com/devices/entities/host-groups/v1"
 
-# assignment_rule = '{"AND":[{"operator":"contains","value":"DHC","field":"hostname"}]}'
-assignment_rule = '{"AND":[{"operator":"wildcard", "value":"*DHC*", "field_name":"hostname"}]}'
+assignment_rule = "hostname:*'DHC'*"
 
 payload = {
     "resources": [
@@ -26,6 +26,5 @@ headers = {
 
 response = requests.post(url, headers=headers, json=payload)
 
-print(response.status_code)
-print(response.json())
-
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())
